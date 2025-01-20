@@ -25,41 +25,41 @@ namespace SeedSearcher
 
         #pragma warning disable Harmony003 // Harmony non-ref patch parameters modified
         
-        // [HarmonyPrefix]
-        // [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.BeginAdventure))]
-        // public static void BeginAdventurePrefix(ref AtOManager __instance, out string __state, string _gameId = "")
-        // {
-        //     LogInfo("BeginAdventurePrefix - Start");
-        //     __state = __instance.GetGameId();
-        //     LogInfo($"BeginAdventurePrefix - GameID - {__state}");
-        // }
-
-        // [HarmonyPostfix]
-        // [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.BeginAdventure))]
-        // public static void BeginAdventurePostfix(ref AtOManager __instance, string __state, string _gameId = "")
-        // {
-        //     LogInfo("BeginAdventurePostfix - Start");
-        //     __instance.SetGameId(__state);
-        //     LogInfo($"BeginAdventurePostfix - GameID - {__instance.GetGameId()}");
-        // }
-
-
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.SetGameId))]
-        public static bool SetGameIdPrefix(ref AtOManager __instance, string _gameId = "")
+        [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.BeginAdventure))]
+        public static void BeginAdventurePrefix(ref AtOManager __instance, out string __state)
         {
-            LogInfo("SetGameIdPrefix - Start");
-            string currId = __instance.GetGameId();
-            LogInfo($"SetGameIdPrefix - CurrentGameID = {currId}");
+            LogInfo("BeginAdventurePrefix - Start");
+            __state = __instance.GetGameId();
+            LogInfo($"BeginAdventurePrefix - GameID - {__state}");
+        }
 
-            if (_gameId=="")
-            {
-                return false;
-            }
-            LogInfo("SetGameIdPrefix - End");
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.BeginAdventure))]
+        public static void BeginAdventurePostfix(ref AtOManager __instance, string __state)
+        {
+            LogInfo("BeginAdventurePostfix - Start");
+            __instance.SetGameId(__state);
+            LogInfo($"BeginAdventurePostfix - GameID - {__instance.GetGameId()}");
+        }
 
-            return true;
-            }
+
+        // [HarmonyPrefix]
+        // [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.SetGameId))]
+        // public static bool SetGameIdPrefix(ref AtOManager __instance, string _gameId = "")
+        // {
+        //     LogInfo("SetGameIdPrefix - Start");
+        //     string currId = __instance.GetGameId();
+        //     LogInfo($"SetGameIdPrefix - CurrentGameID = {currId}");
+
+        //     if (_gameId=="")
+        //     {
+        //         return false;
+        //     }
+        //     LogInfo("SetGameIdPrefix - End");
+
+        //     return true;
+        //     }
 
         public static void LogAllItems()
         {  
@@ -68,6 +68,7 @@ namespace SeedSearcher
             string[] testSeeds = ["test1","test2","test3"];
             foreach(string testSeed in testSeeds)
             {
+                string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
                 // string testSeed = "test1";
                 List<string> itemList = GetItemsFromSeed(_seed:testSeed,_madness:0);
                 LogDebug(string.Join(", ", itemList));
@@ -89,6 +90,8 @@ namespace SeedSearcher
         }
         internal static List<string> GetItemsFromSeed(string _seed = "", string _shop = "caravanshop", string _node = "", int _townReroll = 0, bool _obeliskChallenge = false, int _madness = 0, int _corruptorCount = 0, bool _poverty = false)
         {
+            LogInfo("GetItemsFromSeed - Start");
+
             string reroll = "";
             string node = _node; // have to do this because can't use ref keyword w/ default values
             if (_shop == "caravanshop" && node == "")
@@ -101,26 +104,28 @@ namespace SeedSearcher
             }   
 
             // AtOManager.Instance.Gettown
+            LogInfo("GetItemsFromSeed - Start 1");
 
-            if (AtOManager.Instance != null) // a game is in progress
-            {
-                // replace with current game values if defaults are used
-                if (_seed == "")
-                {
-                    string s = AtOManager.Instance.GetGameId();
-                    _seed = s;
-                }
+            // if (AtOManager.Instance != null) // a game is in progress
+            // {
+            //     // replace with current game values if defaults are used
+            //     if (_seed == "")
+            //     {
+            //         string s = AtOManager.Instance.GetGameId();
+            //         _seed = s;
+            //     }
+            //     LogInfo("GetItemsFromSeed - Start 2");
                     
-                if (node == "")
-                    node = AtOManager.Instance.currentMapNode;
-                if (_townReroll == 0)
-                    reroll = AtOManager.Instance.shopItemReroll;
-                if (_obeliskChallenge == false && GameManager.Instance != null && GameManager.Instance.IsObeliskChallenge())
-                    _obeliskChallenge = true;
-                _madness = _obeliskChallenge ? AtOManager.Instance.GetObeliskMadness() : AtOManager.Instance.GetNgPlus();
-                _corruptorCount = AtOManager.Instance.GetMadnessDifficulty() - _madness;
-                _poverty = AtOManager.Instance.IsChallengeTraitActive("poverty") || MadnessManager.Instance != null && MadnessManager.Instance.IsMadnessTraitActive("poverty");
-            }
+            //     if (node == "")
+            //         node = AtOManager.Instance.currentMapNode;
+            //     if (_townReroll == 0)
+            //         reroll = AtOManager.Instance.shopItemReroll;
+            //     if (_obeliskChallenge == false && GameManager.Instance != null && GameManager.Instance.IsObeliskChallenge())
+            //         _obeliskChallenge = true;
+            //     _madness = _obeliskChallenge ? AtOManager.Instance.GetObeliskMadness() : AtOManager.Instance.GetNgPlus();
+            //     _corruptorCount = AtOManager.Instance.GetMadnessDifficulty() - _madness;
+            //     _poverty = AtOManager.Instance.IsChallengeTraitActive("poverty") || MadnessManager.Instance != null && MadnessManager.Instance.IsMadnessTraitActive("poverty");
+            // }
             #pragma warning restore Harmony003 // Harmony non-ref patch parameters modified
 
             LootData lootData = Globals.Instance.GetLootData(_shop);
@@ -129,6 +134,9 @@ namespace SeedSearcher
                 LogError("Unable to get shop items for " + _shop + " (shop does not exist!)");
                 return null;
             }
+
+            LogInfo("GetItemsFromSeed - Mid 1");
+            
             List<string> ts1 = new List<string>();
             List<string> ts2 = new List<string>();
             for (int index = 0; index < Globals.Instance.CardListByClass[Enums.CardClass.Item].Count; ++index)
@@ -187,6 +195,8 @@ namespace SeedSearcher
                     }
                 }
             }
+
+            LogInfo("GetItemsFromSeed - Mid 2");
             for (int count = ts1.Count; count < lootData.NumItems; ++count)
             {
                 bool flag = false;
@@ -246,6 +256,7 @@ namespace SeedSearcher
                 else
                     break;
             }
+            LogInfo("GetItemsFromSeed - Mid 3");
             ts1.Shuffle<string>(deterministicHashCode);
             if (!_shop.Contains("towntier") && (!_obeliskChallenge && _madness > 0 || _obeliskChallenge))
             {
@@ -283,6 +294,7 @@ namespace SeedSearcher
                     }
                 }
             }
+            LogInfo("GetItemsFromSeed - End 1");
             #pragma warning disable Harmony003 // Harmony non-ref patch parameters modified
             LogInfo($"SHOP CONTENTS for {_shop} at node {node} in seed {_seed} (reroll: {(reroll == "" ? _townReroll.ToString() : reroll)}, {(_obeliskChallenge ? "OC " : "")}madness {_madness.ToString()}|{_corruptorCount.ToString() + (_poverty ? " with poverty" : "")})");
             
