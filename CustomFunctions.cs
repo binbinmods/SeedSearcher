@@ -10,8 +10,15 @@ using UnityEngine.TextCore.LowLevel;
 
 namespace SeedSearcher
 {
-    public class CustomFunctions
+    public static class CustomFunctions
     {
+
+        public static string ToDebugString<TKey, TValue> (this IDictionary<TKey, TValue> dictionary)
+        {
+            return "{" + string.Join(",", dictionary.Select(kv => kv.Key + "=" + kv.Value).ToArray()) + "}";
+        }
+
+        
         /// <summary>
         /// This is just used to help find the debugging
         /// </summary>

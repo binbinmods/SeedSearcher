@@ -6,6 +6,8 @@ using BepInEx.Configuration;
 using HarmonyLib;
 using static Obeliskial_Essentials.Essentials;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 
 // The Plugin csharp file is used to 
@@ -34,7 +36,7 @@ namespace SeedSearcher{
         // and then use config = Config.Bind() to set the title, default value, and description of the config.
         // It automatically creates the appropriate configs.
         
-        public static ConfigEntry<bool> EnableUltrafast { get; set; }
+        public static ConfigEntry<bool> RunSeedSearcher { get; set; }
         internal int ModDate = int.Parse(DateTime.Today.ToString("yyyyMMdd"));
         private readonly Harmony harmony = new(PluginInfo.PLUGIN_GUID);
         internal static ManualLogSource Log;
@@ -49,7 +51,7 @@ namespace SeedSearcher{
             Log.LogInfo($"{PluginInfo.PLUGIN_GUID} {PluginInfo.PLUGIN_VERSION} has loaded!");
             
             // Sets the title, default values, and descriptions
-            EnableUltrafast = Config.Bind(new ConfigDefinition("Ultrafast", "EnableUltrafast"), true, new ConfigDescription("If false, disables the mod. Restart the game upon changing this setting."));
+            RunSeedSearcher = Config.Bind(new ConfigDefinition("RunSeedSearcher", "RunSeedSearcher"), true, new ConfigDescription("If false, disables the mod. Restart the game upon changing this setting."));
             
             // Register with Obeliskial Essentials, delete this if you don't need it.
             // RegisterMod(
@@ -61,8 +63,15 @@ namespace SeedSearcher{
             //     _link: @"https://github.com/binbinmods/SampleCSharpWorkspace"
             // );
 
+            LogDebug($"Pre-Log Items {RunSeedSearcher.Value}");
+
             // apply patches
-            harmony.PatchAll();
+            if(RunSeedSearcher.Value){
+                harmony.PatchAll();
+                SeedSearcher.LogAllItems();
+                
+            }
+            LogDebug($"Post-Log Items {RunSeedSearcher.Value}");
         }
 
         internal static void LogDebug(string msg)
@@ -77,5 +86,8 @@ namespace SeedSearcher{
         {
             Log.LogError(debugBase + msg);
         }
+
+        
+
     }
 }
