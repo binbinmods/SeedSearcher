@@ -13,12 +13,46 @@ namespace SeedSearcher
     public static class CustomFunctions
     {
 
-        public static string ToDebugString<TKey, TValue> (this IDictionary<TKey, TValue> dictionary)
+        public static string SerializeDictionary(Dictionary<string, List<string>> dict)
         {
-            return "{" + string.Join(",", dictionary.Select(kv => kv.Key + "=" + kv.Value).ToArray()) + "}";
+            if (dict == null)
+                throw new ArgumentNullException(nameof(dict));
+
+            var sb = new System.Text.StringBuilder();
+            sb.Append('{');
+
+            // Get sorted keys
+            var sortedKeys = dict.Keys.OrderBy(k => k).ToList();
+
+            for (int i = 0; i < sortedKeys.Count; i++)
+            {
+                string key = sortedKeys[i];
+                List<string> values = dict[key];
+
+                // Add key
+                sb.Append($"\"{key}\",[");
+
+                // Add values
+                for (int j = 0; j < values.Count; j++)
+                {
+                    sb.Append($"\"{values[j]}\"");
+                    if (j < values.Count - 1)
+                        sb.Append(',');
+                }
+
+                sb.Append(']');
+
+                // Add comma if not last item
+                if (i < sortedKeys.Count - 1)
+                    sb.Append(',');
+            }
+
+            sb.Append('}');
+            return sb.ToString();
         }
 
-        
+
+
         /// <summary>
         /// This is just used to help find the debugging
         /// </summary>
@@ -36,7 +70,7 @@ namespace SeedSearcher
         public static void PLog(string s)
         {
             Plugin.Log.LogDebug(debugBase + s);
-        }        
+        }
 
         /// <summary>
         /// Indirect healing for Traits (Ottis's Shielder, Malukah's Voodoo etc)

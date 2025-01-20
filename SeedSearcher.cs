@@ -61,32 +61,47 @@ namespace SeedSearcher
         //     return true;
         //     }
 
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Globals), nameof(Globals.CreateGameContent))]
+        public static void CreateGameContentPostfix(ref Globals __instance)
+        {
+            // Needs to be called here since the game content needs to exist to properly search through it.
+            LogInfo("CreateGameContentPostfix - Start");
+            LogAllItems();
+            LogInfo($"CreateGameContentPostfix - END ");
+        }
+
         public static void LogAllItems()
         {  
             LogInfo("LogAllItems - Start");
             Dictionary<string,List<string>> itemDict = [];
+            // Dictionary<string,string> itemDict = [];
+            // LogCaravanItems()
             string[] testSeeds = ["test1","test2","test3"];
-            foreach(string testSeed in testSeeds)
+            int nSeeds = 300;
+            for(int i = 0; i<nSeeds; i++)
             {
+                // string testSeed = testSeeds[i];
                 string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
-                // string testSeed = "test1";
-                List<string> itemList = GetItemsFromSeed(_seed:testSeed,_madness:0);
-                LogDebug(string.Join(", ", itemList));
-                itemList = GetItemsFromSeed(_seed:testSeed,_madness:1);
-                LogDebug(string.Join(", ", itemList));
-                itemList = GetItemsFromSeed(_seed:testSeed,_madness:8,_corruptorCount:8,_poverty:true);
-                LogDebug(string.Join(", ", itemList));
+                
+                string shop = "caravanshop";
+                List<string> itemList = GetItemsFromSeed(_seed:randomSeed,_shop:shop, _madness:0);            
 
                 foreach(string item in itemList)
                 {
-                    if(!itemDict.ContainsKey(item))
+                    CardData cardData = Globals.Instance.GetCardData(item, false);
+                    string key = cardData.CardUpgraded == Enums.CardUpgraded.Rare ? $"{cardData.CardName} (Corrupted)" : cardData.CardName;
+                    if(!itemDict.ContainsKey(key))
                     {
-                        itemDict.Add(item, []);
+                        itemDict.Add(key, []);
                     }
-                    itemDict[item].Append(testSeed);
+                    if(itemDict[key].Count()<5)
+                    {
+                        itemDict[key].Add(randomSeed);
+                    }                    
                 }                
             }
-            LogDebug($"Dictionary - {CustomFunctions.ToDebugString(itemDict)}");
+            LogDebug($"Dictionary - {SerializeDictionary(itemDict)}");
         }
         internal static List<string> GetItemsFromSeed(string _seed = "", string _shop = "caravanshop", string _node = "", int _townReroll = 0, bool _obeliskChallenge = false, int _madness = 0, int _corruptorCount = 0, bool _poverty = false)
         {

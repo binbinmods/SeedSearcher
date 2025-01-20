@@ -68,7 +68,7 @@ namespace SeedSearcher{
             // apply patches
             if(RunSeedSearcher.Value){
                 harmony.PatchAll();
-                SeedSearcher.LogAllItems();
+                // SeedSearcher.LogAllItems();
                 
             }
             LogDebug($"Post-Log Items {RunSeedSearcher.Value}");
