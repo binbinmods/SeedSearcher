@@ -1,0 +1,9 @@
+{
+    "name": "SeedSearcher",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/binbinmods/SeedSearcher",
+    "description": "A mod for searching through seeds.",
+    "dependencies": [
+        "BepInEx-BepInExPack_AcrossTheObelisk-5.4.23"
+    ]
+}
