@@ -10,6 +10,8 @@ using UnityEngine.Windows.Speech;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Analytics;
 
 // Make sure your namespace is the same everywhere
 namespace SeedSearcher
@@ -74,38 +76,130 @@ namespace SeedSearcher
         public static void LogAllItems()
         {  
             LogInfo("LogAllItems - Start");
+            // LogCaravanItems();
+            // LogGuaranteedShopDropItems();
+            LogShopItems();
+            // LogMythicItems();
+            
+        }
+
+        internal static void LogShopItems()
+        {
+            Dictionary<string,string> shopNodeMap = new()
+            {
+                {"aquarvendor","aquar_26"},
+                {"elvenemporium","faen_23"},
+                {"felineshop","ulmin_29"},
+                {"firebazaar","velka_20"},
+                // {"heronshop","ulmin_27"},
+                // {"Merchantwares","velka_7"},
+                // {"voidshop","voidlow_8"},
+                // {"voidtsnemo","voidlow_24"},
+                // {"voodooshop", "aquar_23"},
+                // {"Jeweler","sen_35"},
+                // {"gobletsmerchant","sewers_4"},
+                // {"werewolfstall_a","sen_30"},
+                // {"werewolfstall_b","sen_30"}
+            };
+
+            Dictionary<string,List<string>> outputItemMap = [];
+            int nSeeds = 300;
+            // LootItem item = lootData.Loot    ItemTable[0];            
+            foreach (string shop in shopNodeMap.Keys)
+            {
+                LootData lootData = Globals.Instance.GetLootData(shop);
+                List<string> validItems = [];
+                foreach (LootItem item in lootData.LootItemTable)
+                {                
+                    if (item.LootCard == null)
+                    {
+                        continue;
+                    }
+                    if (item.LootCard.CardName != "")
+                    {
+                        validItems.Add(item.LootCard.Id);
+                    }
+                }
+                LogDebug($"Shop - {shop} Valid Items - {string.Join(", ",validItems)}");
+
+                for (int i = 0; i < nSeeds; i++)
+                {
+                string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                string node = shopNodeMap[shop];
+                List<string> itemList = GetItemsFromSeed(_seed:randomSeed,_shop:shop,_node:node, _madness:1);
+                // LogDebug($"Shop - {shop} itemList Items - {string.Join(", ",itemList)}");
+                UpdateItemDictForShops(ref outputItemMap,itemList,validItems,randomSeed,shop);
+                }
+            }
+            
+            LogDebug($"Shop Items - {SerializeDictionary(outputItemMap)}");
+
+        }
+
+        internal static void LogCaravanItems()
+        {
             Dictionary<string,List<string>> itemDict = [];
             // Dictionary<string,string> itemDict = [];
             // LogCaravanItems()
-            string[] testSeeds = ["test1","test2","test3"];
-            int nSeeds = 300;
+            int nSeeds = 10000;
             for(int i = 0; i<nSeeds; i++)
             {
                 // string testSeed = testSeeds[i];
                 string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
                 
                 string shop = "caravanshop";
-                List<string> itemList = GetItemsFromSeed(_seed:randomSeed,_shop:shop, _madness:0);            
+                string node = "sen_44";
+                List<string> itemList = GetItemsFromSeed(_seed:randomSeed,_shop:shop,_node:node, _madness:1);            
+                UpdateItemDict(ref itemDict,itemList,randomSeed);
+                        
+            }
+            LogDebug($"Dictionary - {SerializeDictionary(itemDict)}");
+        }
 
-                foreach(string item in itemList)
+
+        internal static void UpdateItemDictForShops(ref Dictionary<string,List<string>> itemDict, List<string> itemList, List<string> validItems, string seed, string shopName, int count = 5)
+        {
+            foreach(string item in itemList)
                 {
-                    CardData cardData = Globals.Instance.GetCardData(item, false);
+                    if(!validItems.Contains(item))
+                    {
+                        continue;
+                    }
+
+                    CardData cardData = Globals.Instance.GetCardData(item, false);    
+                    // if(cardData==null){continue;}
+                    if(cardData==null || cardData.CardUpgraded!=Enums.CardUpgraded.Rare){continue;}
+                    string key = $"{shopName} - {cardData.CardName}";
+                    if(!itemDict.ContainsKey(key))
+                    {
+                        itemDict.Add(key, []);
+                    }
+                    if(itemDict[key].Count()<count)
+                    {
+                        itemDict[key].Add(seed);
+                    }                    
+                }          
+        }
+
+        internal static void UpdateItemDict(ref Dictionary<string,List<string>> itemDict, List<string> itemList, string seed, int count = 5)
+        {
+            foreach(string item in itemList)
+                {
+                    CardData cardData = Globals.Instance.GetCardData(item, false);                    
                     string key = cardData.CardUpgraded == Enums.CardUpgraded.Rare ? $"{cardData.CardName} (Corrupted)" : cardData.CardName;
                     if(!itemDict.ContainsKey(key))
                     {
                         itemDict.Add(key, []);
                     }
-                    if(itemDict[key].Count()<5)
+                    if(itemDict[key].Count()<count)
                     {
-                        itemDict[key].Add(randomSeed);
+                        itemDict[key].Add(seed);
                     }                    
-                }                
-            }
-            LogDebug($"Dictionary - {SerializeDictionary(itemDict)}");
+                }          
         }
         internal static List<string> GetItemsFromSeed(string _seed = "", string _shop = "caravanshop", string _node = "", int _townReroll = 0, bool _obeliskChallenge = false, int _madness = 0, int _corruptorCount = 0, bool _poverty = false)
         {
-            LogInfo("GetItemsFromSeed - Start");
+            // LogInfo("GetItemsFromSeed - Start");
 
             string reroll = "";
             string node = _node; // have to do this because can't use ref keyword w/ default values
@@ -119,7 +213,7 @@ namespace SeedSearcher
             }   
 
             // AtOManager.Instance.Gettown
-            LogInfo("GetItemsFromSeed - Start 1");
+            // LogInfo("GetItemsFromSeed - Start 1");
 
             // if (AtOManager.Instance != null) // a game is in progress
             // {
@@ -150,7 +244,7 @@ namespace SeedSearcher
                 return null;
             }
 
-            LogInfo("GetItemsFromSeed - Mid 1");
+            // LogInfo("GetItemsFromSeed - Mid 1");
             
             List<string> ts1 = new List<string>();
             List<string> ts2 = new List<string>();
@@ -211,7 +305,7 @@ namespace SeedSearcher
                 }
             }
 
-            LogInfo("GetItemsFromSeed - Mid 2");
+            // LogInfo("GetItemsFromSeed - Mid 2");
             for (int count = ts1.Count; count < lootData.NumItems; ++count)
             {
                 bool flag = false;
@@ -271,7 +365,7 @@ namespace SeedSearcher
                 else
                     break;
             }
-            LogInfo("GetItemsFromSeed - Mid 3");
+            // LogInfo("GetItemsFromSeed - Mid 3");
             ts1.Shuffle<string>(deterministicHashCode);
             if (!_shop.Contains("towntier") && (!_obeliskChallenge && _madness > 0 || _obeliskChallenge))
             {
@@ -309,9 +403,9 @@ namespace SeedSearcher
                     }
                 }
             }
-            LogInfo("GetItemsFromSeed - End 1");
+            // LogInfo("GetItemsFromSeed - End 1");
             #pragma warning disable Harmony003 // Harmony non-ref patch parameters modified
-            LogInfo($"SHOP CONTENTS for {_shop} at node {node} in seed {_seed} (reroll: {(reroll == "" ? _townReroll.ToString() : reroll)}, {(_obeliskChallenge ? "OC " : "")}madness {_madness.ToString()}|{_corruptorCount.ToString() + (_poverty ? " with poverty" : "")})");
+            // LogInfo($"SHOP CONTENTS for {_shop} at node {node} in seed {_seed} (reroll: {(reroll == "" ? _townReroll.ToString() : reroll)}, {(_obeliskChallenge ? "OC " : "")}madness {_madness.ToString()}|{_corruptorCount.ToString() + (_poverty ? " with poverty" : "")})");
             
             return ts1;
             // foreach (string cardID in ts1)

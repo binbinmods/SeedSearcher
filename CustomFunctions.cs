@@ -30,7 +30,7 @@ namespace SeedSearcher
                 List<string> values = dict[key];
 
                 // Add key
-                sb.Append($"\"{key}\",[");
+                sb.Append($"\"{key}\":[");
 
                 // Add values
                 for (int j = 0; j < values.Count; j++)
