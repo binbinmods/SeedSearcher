@@ -309,7 +309,7 @@ namespace SeedSearcher
             Dictionary<string,List<string>> itemDict = [];
             // Dictionary<string,string> itemDict = [];
             // LogCaravanItems()
-            int nSeeds = 10000;
+            int nSeeds = 100000;
             for(int i = 0; i<nSeeds; i++)
             {
                 // string testSeed = testSeeds[i];
