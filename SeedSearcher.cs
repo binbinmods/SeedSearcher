@@ -77,9 +77,9 @@ namespace SeedSearcher
         {  
             LogInfo("LogAllItems - Start");
             // LogCaravanItems();
-            // LogGuaranteedDropItems();
-            LogBossDropItems();
-            // LogShopItems();
+            LogGuaranteedDropItems();
+            // LogBossDropItems();
+            // LogPetItems();
             // LogMythicItems();
             
         }
@@ -118,8 +118,9 @@ namespace SeedSearcher
                 {"wolfy", "sen_46"},
 
             };
-            int nSeeds = 300;
-            HandleDropItems(dropNodeMap,nSeeds);
+            int nSeeds = 500;
+            HandleDropItems(dropNodeMap,nSeeds,rareOnly:true);
+            LogInfo("Completed Pet Items");
         }
 
 
@@ -161,8 +162,9 @@ namespace SeedSearcher
                 {"upripreboss", "uprising_13"},
                 {"yogger", "sen_27"},
             };
-            int nSeeds = 300;
+            int nSeeds = 500;
             HandleDropItems(dropNodeMap,nSeeds,rareOnly:true);
+            LogInfo("Completed Boss Items");
         }
 
         internal static void LogGuaranteedDropItems()
@@ -202,7 +204,7 @@ namespace SeedSearcher
                 {"eeriechest_b", "sen_6"},
                 {"lavacascade", "velka_22"},
                 {"lootedarmory", "pyr_10"},
-                {"lootsepulchralrare", "voidlow_18"},
+                // {"lootsepulchralrare", "voidlow_18"},
                 {"obsidianall", "forge_3"},
                 {"obsidiananvil", "forge_3"},
                 {"obsidianboots", "forge_3"},
@@ -239,8 +241,9 @@ namespace SeedSearcher
                 {"voidtreasurejade", "voidlow_16"},
                 {"watermill", "sen_15"},
             };
-            int nSeeds = 300;
-            HandleDropItems(dropNodeMap,nSeeds);
+            int nSeeds = 500;
+            HandleDropItems(dropNodeMap,nSeeds, rareOnly:true);
+            LogInfo("Completed Guaranteed Items");
 
         }
 
@@ -301,11 +304,11 @@ namespace SeedSearcher
 
                 for (int i = 0; i < nSeeds; i++)
                 {
-                string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
-                string node = lootNodeMap[shop];
-                List<string> itemList = GetItemsFromSeed(_seed:randomSeed,_shop:shop,_node:node, _madness:8,_corruptorCount:8);
-                // LogDebug($"Shop - {shop} itemList Items - {string.Join(", ",itemList)}");
-                UpdateItemDictForShops(ref outputItemMap,itemList,validItems,randomSeed,shop);
+                    string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                    string node = lootNodeMap[shop];
+                    List<string> itemList = GetItemsFromSeed(_seed:randomSeed,_shop:shop,_node:node, _madness:1,_corruptorCount:0);
+                    // LogDebug($"Shop - {shop} itemList Items - {string.Join(", ",itemList)}");
+                    UpdateItemDictForShops(ref outputItemMap,itemList,validItems,randomSeed,shop, count:10);
                 }
             }
             
