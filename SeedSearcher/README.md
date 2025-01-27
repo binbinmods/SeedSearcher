@@ -1,8 +1,10 @@
-# SeedSearcher
+# Definite Seeds
 
 This is a simple mod that makes it easier to search through seeds for things.
 
-Disables random seed generation
+Currently only disables random seed generation
+
+Planned to allow you to choose what item(s) you want and then it will find a seed with those items.
 
 
 ## Installation (manual)

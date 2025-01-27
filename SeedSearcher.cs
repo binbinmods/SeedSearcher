@@ -2,9 +2,9 @@ using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Configuration;
 using HarmonyLib;
-using static Obeliskial_Essentials.Essentials;
+// using static Obeliskial_Essentials.Essentials;
 using System;
-using static SeedSearcher.CustomFunctions;
+// using static SeedSearcher.CustomFunctions;
 using static SeedSearcher.Plugin;
 using UnityEngine.Windows.Speech;
 using System.Collections.Generic;
@@ -76,9 +76,9 @@ namespace SeedSearcher
         public static void LogAllItems()
         {  
             LogInfo("LogAllItems - Start");
-            LogCaravanItems();
+            // LogCaravanItems();
             // LogGuaranteedDropItems();
-            // LogBossDropItems();
+            LogBossDropItems();
             // LogShopItems();
             // LogMythicItems();
             
@@ -162,7 +162,7 @@ namespace SeedSearcher
                 {"yogger", "sen_27"},
             };
             int nSeeds = 300;
-            HandleDropItems(dropNodeMap,nSeeds);
+            HandleDropItems(dropNodeMap,nSeeds,rareOnly:true);
         }
 
         internal static void LogGuaranteedDropItems()
@@ -270,7 +270,7 @@ namespace SeedSearcher
 
         }
 
-        internal static void HandleDropItems(Dictionary<string,string> lootNodeMap, int nSeeds = 300)
+        internal static void HandleDropItems(Dictionary<string,string> lootNodeMap, int nSeeds = 300, bool rareOnly = false)
         {
             Dictionary<string,List<string>> outputItemMap = [];
 
@@ -286,7 +286,15 @@ namespace SeedSearcher
                     }
                     if (item.LootCard.CardName != "")
                     {
-                        validItems.Add(item.LootCard.Id);
+                        if(rareOnly)
+                        {
+                            validItems.Add(item.LootCard.Id+"rare");
+                        }
+                        else
+                        {
+                            validItems.Add(item.LootCard.Id);
+                        }
+                        
                     }
                 }
                 LogDebug($"Shop - {shop} Valid Items - {string.Join(", ",validItems)}");
@@ -301,7 +309,7 @@ namespace SeedSearcher
                 }
             }
             
-            LogDebug($"Shop Items - {SerializeDictionary(outputItemMap)}");
+            LogDebug($"Shop Items - {DictToString(outputItemMap)}");
         }
 
         internal static void LogCaravanItems()
@@ -309,7 +317,7 @@ namespace SeedSearcher
             Dictionary<string,List<string>> itemDict = [];
             // Dictionary<string,string> itemDict = [];
             // LogCaravanItems()
-            int nSeeds = 100000;
+            int nSeeds = 1000;
             for(int i = 0; i<nSeeds; i++)
             {
                 // string testSeed = testSeeds[i];
@@ -321,7 +329,7 @@ namespace SeedSearcher
                 UpdateItemDict(ref itemDict,itemList,randomSeed);
                         
             }
-            LogDebug($"Dictionary - {SerializeDictionary(itemDict)}");
+            LogDebug($"Dictionary - {DictToString(itemDict)}");
         }
 
 

@@ -4,7 +4,7 @@ using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Configuration;
 using HarmonyLib;
-using static Obeliskial_Essentials.Essentials;
+// using static Obeliskial_Essentials.Essentials;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,7 +87,39 @@ namespace SeedSearcher{
             Log.LogError(debugBase + msg);
         }
 
-        
+        public static string DictToString(Dictionary<string, List<string>> dict)
+        {
+            if (dict == null)
+                throw new ArgumentNullException(nameof(dict));
+
+            var sb = new System.Text.StringBuilder();
+            sb.Append('{');
+
+            var sortedKeys = dict.Keys.OrderBy(k => k).ToList();
+
+            for (int i = 0; i < sortedKeys.Count; i++)
+            {
+                string key = sortedKeys[i];
+                List<string> values = dict[key];
+
+                sb.Append($"\"{key}\":[");
+
+                for (int j = 0; j < values.Count; j++)
+                {
+                    sb.Append($"\"{values[j]}\"");
+                    if (j < values.Count - 1)
+                        sb.Append(',');
+                }
+
+                sb.Append(']');
+
+                if (i < sortedKeys.Count - 1)
+                    sb.Append(',');
+            }
+
+            sb.Append('}');
+            return sb.ToString();
+        }
 
     }
 }
