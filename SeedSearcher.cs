@@ -77,12 +77,66 @@ namespace SeedSearcher
         {  
             LogInfo("LogAllItems - Start");
             // LogCaravanItems();
-            LogGuaranteedDropItems();
+            // LogGuaranteedDropItems();
             // LogBossDropItems();
-            // LogPetItems();
+            LogPetItems();
             // LogMythicItems();
             
         }
+
+        internal static void LogMythicItems()
+        {
+            Dictionary<string,string> MythicLocations = new()
+            {
+                {"towntier3", "voidlow_1"},
+                {"towntier3_a", "voidlow_1"},
+                {"towntier3_b", "voidlow_1"},
+                {"ruinedplaza", "voidlow_5"},
+                {"ruinedplaza_crit", "voidlow_5"},
+                {"voidasmody", "voidhigh_6"},
+                {"voidshop", "voidlow_8"},
+                {"voidtreasure", "voidlow_16"},
+                {"voidtreasurejade", "voidlow_16"},
+                {"voidtsnemo", "voidlow_24"},
+                {"voidtwins", "voidlow_25"},
+                {"wareacc1", "voidlow_4"},
+                {"wareacc2", "voidlow_4"},
+                {"warearm1", "voidlow_4"},
+                {"warearm2", "voidlow_4"},
+                {"warejew1", "voidlow_4"},
+                {"warejew2", "voidlow_4"},
+                {"warenavalea", "voidlow_4"},
+                {"wareweap1", "voidlow_4"},
+                {"wareweap2", "voidlow_4"},
+            };
+            int nSeeds = 2000;
+            HandleMythics(MythicLocations,nSeeds,rareOnly:false);
+            LogInfo("Completed Mythic Items");
+        }
+
+        internal static void HandleMythics(Dictionary<string,string> lootNodeMap, int nSeeds = 300, bool rareOnly = false)
+        {
+            Dictionary<string,List<string>> outputItemMap = [];
+
+            foreach (string location in lootNodeMap.Keys)
+            {
+                LogDebug($"Searching Location {location}");
+                for (int i = 0; i < nSeeds; i++)
+                {
+                    string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                    string node = lootNodeMap[location];
+                    List<string> itemList = GetItemsFromSeed(_seed:randomSeed,_shop:location,_node:node, _madness:1,_corruptorCount:0);
+                    // LogDebug($"Shop - {shop} itemList Items - {string.Join(", ",itemList)}");
+                    UpdateItemDictForMythics(ref outputItemMap,itemList,randomSeed,location, count:10);
+                }
+            }
+            
+            LogDebug($"Shop Items - {DictToString(outputItemMap)}");
+        }
+
+        
+
+
         internal static void LogPetItems()
         {
             Dictionary<string,string> dropNodeMap = new()
@@ -313,6 +367,26 @@ namespace SeedSearcher
             }
             
             LogDebug($"Shop Items - {DictToString(outputItemMap)}");
+        }
+
+        internal static void UpdateItemDictForMythics(ref Dictionary<string,List<string>> itemDict, List<string> itemList, string seed, string shopName, int count = 5)
+        {
+            foreach(string item in itemList)
+                {                   
+
+                    CardData cardData = Globals.Instance.GetCardData(item, false);    
+                    // if(cardData==null){continue;}
+                    if(cardData==null || cardData.CardRarity!=Enums.CardRarity.Mythic){continue;}
+                    string key = $"{shopName} - {cardData.CardName}";
+                    if(!itemDict.ContainsKey(key))
+                    {
+                        itemDict.Add(key, []);
+                    }
+                    if(itemDict[key].Count()<count)
+                    {
+                        itemDict[key].Add(seed);
+                    }                    
+                }          
         }
 
         internal static void LogCaravanItems()
