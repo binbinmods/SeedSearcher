@@ -1,6 +1,6 @@
 {
     "name": "Definite_Seeds",
-    "version_number": "1.0.1",
+    "version_number": "1.0.2",
     "website_url": "https://github.com/binbinmods/SeedSearcher",
     "description": "A mod that bypasses the randomized seeds in high madness.",
     "dependencies": [

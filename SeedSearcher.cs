@@ -25,6 +25,8 @@ namespace SeedSearcher
         // Prefixes are executed before the original code, postfixes are executed after
         // Then you need to tell Harmony which method to patch.
 
+        // public static 
+
         #pragma warning disable Harmony003 // Harmony non-ref patch parameters modified
         
         [HarmonyPrefix]
@@ -69,18 +71,316 @@ namespace SeedSearcher
         {
             // Needs to be called here since the game content needs to exist to properly search through it.
             LogInfo("CreateGameContentPostfix - Start");
-            LogAllItems();
+            // LogAllItems();
+            // FindSeedWithItems();
+            // CheckSingleSeed("QB2WCZW");
+            int nSeeds = 1000000;
+            
+            Dictionary<string,string> itemsAndShops = new() {
+                {"glacialhammer","caravanshop"},
+                {"frostfirering","caravanshop"}
+                };
+
+            Dictionary<string,string> itemsAndShops2 = new() {
+                {"paladingauntletsrare","elvenarmoryplus"},
+                {"lightbringerrare","voidtwins"}
+                };
+
+            Dictionary<string,string> itemsAndShops3 = new() {
+                // {"krakensushirare","sahtikrakenmjolmir"},
+                // {"purpletentaclerare","sahtikrakenmjolmir"},
+                {"mjolnirrare","sahtikrakenmjolmir"},
+                {"strawhatrare","voidtreasurejade"},
+                // {"jollyrogerrare","sahtirustkingtreasure"},
+                };    
+
+            // string seed = CheckSeeds(itemsAndShops,nSeeds,madness:1,corruptorCount:1);
+
+            string seed = DoubleCaravanEpics();
+            LogDebug($"Seed meeting conditions: {seed}");
+
             LogInfo($"CreateGameContentPostfix - END ");
+        }
+
+        internal static string DoubleCaravanEpics()
+        {
+            int nSeeds = 1000000;
+            for (int i = 0; i < nSeeds; i++)
+            {
+                if (i%1000==0){LogDebug($"On Seed {i}");}
+
+                string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+
+                List<(string,string)> l  =[("destroyergauntlet","shacklesofwar"),
+                                        ("glacialhammer","frostfirering"),
+                                        ("theporcupine","spikedshoulderpads"),
+                                        ("curseddagger","yinyangbadge")];
+                
+                List<string> itemList = GetItemsFromSeed(_seed:randomSeed,_shop:"caravanshop",_node:"sen_44", _madness:1,_corruptorCount:0);
+                foreach( (string, string) pair in l)
+                {
+                    if (itemList.Contains(pair.Item1) && itemList.Contains(pair.Item2))
+                    {                    
+                        return $"{randomSeed} - ";
+                    }
+                }
+                
+
+            }
+            return "";
+
+        }
+
+        internal static bool CheckSingleSeed(string seed, Dictionary<string,string> itemsAndShops, int madness = 1, int corruptorCount = 0)
+        {
+            // LogDebug("CheckSingleSeed");
+            Dictionary<string, string> allLootLocations = new() {
+                // {"towntier3", "voidlow_1"}, {"towntier3_a", "voidlow_1"}, {"towntier3_b", "voidlow_1"}, {"ruinedplaza", "voidlow_5"}, {"ruinedplaza_crit", "voidlow_5"}, {"voidasmody", "voidhigh_6"}, {"voidshop", "voidlow_8"}, {"voidtreasure", "voidlow_16"}, {"voidtreasurejade", "voidlow_16"}, {"voidtsnemo", "voidlow_24"}, {"voidtwins", "voidlow_25"}, {"wareacc1", "voidlow_4"}, {"wareacc2", "voidlow_4"}, {"warearm1", "voidlow_4"}, {"warearm2", "voidlow_4"}, {"warejew1", "voidlow_4"}, {"warejew2", "voidlow_4"}, {"warenavalea", "voidlow_4"}, {"wareweap1", "voidlow_4"}, {"wareweap2", "voidlow_4"}, {"aquarvendor","aquar_26"}, {"elvenemporium","faen_23"}, {"felineshop","ulmin_29"}, {"firebazaar","velka_20"}, {"heronshop","ulmin_27"}, {"Merchantwares","velka_7"}, {"voidshop","voidlow_8"}, {"voidtsnemo","voidlow_24"}, {"voodooshop", "aquar_23"}, {"Jeweler","sen_35"}, {"gobletsmerchant","sewers_4"}, {"werewolfstall_a","sen_30"}, {"werewolfstall_b","sen_30"}, {"FrozenSewersElves", "sewers_11"}, {"FrozenSewersMix", "sewers_11"}, {"FrozenSewersRatmen", "sewers_11"}, {"Jewelerrings", "sen_35"}, {"Mansionleft", "faen_35"}, {"Mansionleftplus", "faen_35"}, {"Sailor", "faen_4"}, {"Stolenitems", "faen_10"}, 
+                // {"apprentince", "sen_24"}, {"balanceblack", "ulmin_52"}, {"balanceboth", "ulmin_52"}, {"balancewhite", "ulmin_52"}, {"battlefield", "aquar_6"}, {"bridge", "sen_17"}, {"chappel", "sen_21"}, {"crane", "velka_21"}, {"crocoloot", "aquar_7"}, {"crocosmugglers", "aquar_48"}, {"desertreliquary", "ulmin_58"}, {"dreadcosme", "dread_2"}, {"dreadcuthbert", "dread_2"}, {"dreadfrancis", "dread_2"}, {"dreadhoratio", "dread_2"}, {"dreadjack", "dread_2"}, {"dreadmimic", "dread_10"},                                
+                // {"dreadrhodogor", "dread_2"}, {"eeriechest_a", "sen_6"}, {"eeriechest_b", "sen_6"}, {"lavacascade", "velka_22"}, {"lootedarmory", "pyr_10"}, {"obsidianall", "forge_3"}, {"obsidiananvil", "forge_3"}, {"obsidianboots", "forge_3"}, {"obsidianrings", "forge_3"}, {"obsidianrods", "forge_3"}, {"rift", "velka_40"}, {"riftsen", "sen_48"}, {"sahtibernardstash", "sahti_52"}, {"sahtidomedesert", "sahti_49"}, {"sahtidomeice", "sahti_49"}, {"sahtidomemain", "sahti_49"}, {"sahtidomemountain", "sahti_49"}, {"sahtidomeswamp", "sahti_49"}, {"sahtipiratearsenal", "sahti_25"}, {"sahtipiratewarehouse", "sahti_25"}, {"sahtiplaguecot", "sahti_11"}, {"sahtisurgeonarsenal", "sahti_13"}, {"sahtisurgeonstash", "sahti_13"}, {"sahtitreasurechamber", "sahti_25"}, {"sahtivalkyriestash", "sahti_19"}, {"thorimsrod", "forge_8"}, {"treasureaquarfall", "aquar_28"}, {"uprienergy", "uprising_5"}, {"uprimagma", "uprising_4"}, {"voidcraftemerald", "voidlow_14"}, {"voidcraftgolden", "voidlow_14"}, {"voidcraftobsidian", "voidlow_14"}, {"voidcraftpearl", "voidlow_14"}, {"voidcraftring", "voidlow_14"}, {"voidcraftruby", "voidlow_14"}, {"voidcraftsapphire", "voidlow_14"}, {"voidcrafttopaz", "voidlow_14"}, {"voidtreasurejade", "voidlow_16"}, {"watermill", "sen_15"},
+                // {"Jelly", "aquar_41"}, {"betty", "sen_39"}, {"blobbleed", "sen_29"}, {"blobcold", "sewers_13"}, {"blobdire", "velka_37"}, {"blobholy", "pyr_12"}, {"bloblightning", "sahti_30"}, {"blobmetal", "velka_38"}, {"blobmind", "dread_7"}, {"blobpoison", "aquar_44"}, {"blobselem", "voidlow_28"}, {"blobshadow", "ulmin_59"}, {"blobsmyst", "voidlow_28"}, {"blobsphys", "voidlow_28"}, {"blobwater", "aquar_45"}, {"cuby", "pyr_9"}, {"cubyd", "pyr_9"}, {"daley", "faen_7"}, {"fenny", "ulmin_6"}, {"fishlava", "forge_8"}, {"inky", "aquar_41"}, {"liante", "lair_5"}, {"matey", "sahti_20"}, {"mimy", "dread_10"}, {"oculy", "aquar_41"}, {"sharpy", "aquar_18"}, {"slimy", "lair_7"}, {"stormy", "aquar_24"}, {"wolfy", "sen_46"},
+                {"caravanshop", "sen_44"},{"Basthet", "pyr_7"}, {"Dryad_a", "sen_31"}, {"Dryad_b", "sen_32"}, {"Faeborg", "faen_38"}, {"Hydra", "aquar_35"}, {"Ignidoh", "velka_32"}, {"Mansionright", "faen_35"}, {"Mortis", "ulmin_56"}, {"Tulah", "lair_8"}, {"Ylmer", "sen_33"}, {"belphyor", "secta_5"}, {"belphyorquest", "velka_8"}, {"burninghand", "velka_25"}, {"dreadhalfman", "dread_11"}, {"elvenarmory", "faen_29"}, {"elvenarmoryplus", "faen_29"}, {"goblintown", "velka_6"}, {"harpychest", "velka_27"}, {"harpyfight", "velka_27"}, {"khazakdhum", "velka_29"}, {"kingrat", "sewers_8"}, {"minotaurcave", "velka_9"}, {"sahtikraken", "sahti_65"}, {"sahtikrakenmjolmir", "sahti_65"}, {"sahtirustkingtreasure", "sahti_62"}, {"spiderqueen", "sen_1"}, {"tyrant", "faen_25"}, {"tyrantbeavers", "faen_25"}, {"tyrantchampy", "faen_25"}, {"tyrantchompy", "faen_25"}, {"tyrantchumpy", "faen_25"}, {"upripreboss", "uprising_13"}, {"yogger", "sen_27"},{"voidtwins", "voidlow_25"},{"voidtreasurejade", "voidlow_16"}
+            };
+            // string shop = "sahtikrakenmjolmir";   
+            // string lootLocation = "sahti_65";
+            // LogDebug("CheckSingleSeed - Pre getItems");
+            
+            foreach(KeyValuePair<string,string> itemShopPair in itemsAndShops)
+            {
+                string item = itemShopPair.Key;
+                string shop = itemShopPair.Value;                
+                string lootLocation = allLootLocations.ContainsKey(shop) ? allLootLocations[shop] : "";
+                if (lootLocation == "") {LogDebug($"improper LootLocation - {shop}"); return false;}
+                List<string> itemList = GetItemsFromSeed(_seed:seed,_shop:shop,_node:lootLocation, _madness:madness,_corruptorCount:corruptorCount);
+                if (!itemList.Contains(item))
+                {
+                    return false;
+                }
+            }
+
+            
+            
+            return true;
+        }
+
+        internal static string CheckSeeds(Dictionary<string,string> itemsAndShops, int nSeeds, int madness = 1, int corruptorCount = 0)
+        {
+            LogDebug("CheckSeeds - Begin");
+            string correctSeed = "";
+            for (int i = 0; i < nSeeds; i++)
+            {
+                if (i%1000==0){LogDebug($"On Seed {i}");}
+                string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                if(CheckSingleSeed(randomSeed,itemsAndShops,madness:madness,corruptorCount:corruptorCount))
+                {
+                    correctSeed = randomSeed;
+                    break;
+                }
+            }
+            return correctSeed;
+        }
+
+
+
+        internal static void FindSeedWithItems()
+        {            
+            Dictionary<string,string> allItemDropLocations = new()
+            {
+                {"towntier3", "voidlow_1"},
+                {"towntier3_a", "voidlow_1"},
+                {"towntier3_b", "voidlow_1"},
+                {"ruinedplaza", "voidlow_5"},
+                {"ruinedplaza_crit", "voidlow_5"},
+                {"voidasmody", "voidhigh_6"},
+                {"voidshop", "voidlow_8"},
+                {"voidtreasure", "voidlow_16"},
+                {"voidtreasurejade", "voidlow_16"},
+                {"voidtsnemo", "voidlow_24"},
+                {"voidtwins", "voidlow_25"},
+                {"wareacc1", "voidlow_4"},
+                {"wareacc2", "voidlow_4"},
+                {"warearm1", "voidlow_4"},
+                {"warearm2", "voidlow_4"},
+                {"warejew1", "voidlow_4"},
+                {"warejew2", "voidlow_4"},
+                {"warenavalea", "voidlow_4"},
+                {"wareweap1", "voidlow_4"},
+                {"wareweap2", "voidlow_4"},
+
+                {"aquarvendor","aquar_26"},
+                {"elvenemporium","faen_23"},
+                {"felineshop","ulmin_29"},
+                {"firebazaar","velka_20"},
+                {"heronshop","ulmin_27"},
+                {"Merchantwares","velka_7"},
+                {"voidshop","voidlow_8"},
+                {"voidtsnemo","voidlow_24"},
+                {"voodooshop", "aquar_23"},
+                {"Jeweler","sen_35"},
+                {"gobletsmerchant","sewers_4"},
+                {"werewolfstall_a","sen_30"},
+                {"werewolfstall_b","sen_30"},
+
+                {"FrozenSewersElves", "sewers_11"},
+                {"FrozenSewersMix", "sewers_11"},
+                {"FrozenSewersRatmen", "sewers_11"},
+                {"Jewelerrings", "sen_35"},
+                {"Mansionleft", "faen_35"},
+                {"Mansionleftplus", "faen_35"},
+                {"Sailor", "faen_4"},
+                // {"Shady", "sen_1"},
+                {"Stolenitems", "faen_10"},
+                {"apprentince", "sen_24"},
+                {"balanceblack", "ulmin_52"},
+                {"balanceboth", "ulmin_52"},
+                {"balancewhite", "ulmin_52"},
+                {"battlefield", "aquar_6"},
+                {"bridge", "sen_17"},
+                {"chappel", "sen_21"},
+                {"crane", "velka_21"},
+                {"crocoloot", "aquar_7"},
+                {"crocosmugglers", "aquar_48"},
+                {"desertreliquary", "ulmin_58"},
+                {"dreadcosme", "dread_2"},
+                {"dreadcuthbert", "dread_2"},
+                {"dreadfrancis", "dread_2"},
+                {"dreadhoratio", "dread_2"},
+                {"dreadjack", "dread_2"},
+                {"dreadmimic", "dread_10"},
+                // {"dreadpurser", "sen_1"},
+                // {"dreadpurserstash", "sen_1"},
+                {"dreadrhodogor", "dread_2"},
+                {"eeriechest_a", "sen_6"},
+                {"eeriechest_b", "sen_6"},
+                {"lavacascade", "velka_22"},
+                {"lootedarmory", "pyr_10"},
+                // {"lootsepulchralrare", "voidlow_18"},
+                {"obsidianall", "forge_3"},
+                {"obsidiananvil", "forge_3"},
+                {"obsidianboots", "forge_3"},
+                {"obsidianrings", "forge_3"},
+                {"obsidianrods", "forge_3"},
+                {"rift", "velka_40"},
+                {"riftsen", "sen_48"},
+                {"sahtibernardstash", "sahti_52"},
+                {"sahtidomedesert", "sahti_49"},
+                {"sahtidomeice", "sahti_49"},
+                {"sahtidomemain", "sahti_49"},
+                {"sahtidomemountain", "sahti_49"},
+                {"sahtidomeswamp", "sahti_49"},
+                {"sahtipiratearsenal", "sahti_25"},
+                {"sahtipiratewarehouse", "sahti_25"},
+                {"sahtiplaguecot", "sahti_11"},
+                {"sahtisurgeonarsenal", "sahti_13"},
+                {"sahtisurgeonstash", "sahti_13"},
+                {"sahtitreasurechamber", "sahti_25"},
+                {"sahtivalkyriestash", "sahti_19"},
+                {"thorimsrod", "forge_8"},
+                {"treasureaquarfall", "aquar_28"},
+                {"uprienergy", "uprising_5"},
+                {"uprimagma", "uprising_4"},
+                {"voidcraftemerald", "voidlow_14"},
+                {"voidcraftgolden", "voidlow_14"},
+                {"voidcraftobsidian", "voidlow_14"},
+                {"voidcraftpearl", "voidlow_14"},
+                {"voidcraftring", "voidlow_14"},
+                // {"voidcraftrodsofblasting", "sen_1"},
+                {"voidcraftruby", "voidlow_14"},
+                {"voidcraftsapphire", "voidlow_14"},
+                {"voidcrafttopaz", "voidlow_14"},
+                {"voidtreasurejade", "voidlow_16"},
+                {"watermill", "sen_15"},
+
+                {"Jelly", "aquar_41"},
+                {"betty", "sen_39"},
+                {"blobbleed", "sen_29"},
+                {"blobcold", "sewers_13"},
+                {"blobdire", "velka_37"},
+                {"blobholy", "pyr_12"},
+                {"bloblightning", "sahti_30"},
+                {"blobmetal", "velka_38"},
+                {"blobmind", "dread_7"},
+                {"blobpoison", "aquar_44"},
+                {"blobselem", "voidlow_28"},
+                {"blobshadow", "ulmin_59"},
+                {"blobsmyst", "voidlow_28"},
+                {"blobsphys", "voidlow_28"},
+                {"blobwater", "aquar_45"},
+                {"cuby", "pyr_9"},
+                {"cubyd", "pyr_9"},
+                {"daley", "faen_7"},
+                {"fenny", "ulmin_6"},
+                {"fishlava", "forge_8"},
+                {"inky", "aquar_41"},
+                {"liante", "lair_5"},
+                {"matey", "sahti_20"},
+                {"mimy", "dread_10"},
+                {"oculy", "aquar_41"},
+                {"sharpy", "aquar_18"},
+                {"slimy", "lair_7"},
+                {"stormy", "aquar_24"},
+                {"wolfy", "sen_46"},
+
+                {"Basthet", "pyr_7"},
+                {"Dryad_a", "sen_31"},
+                {"Dryad_b", "sen_32"},
+                {"Faeborg", "faen_38"},
+                {"Hydra", "aquar_35"},
+                {"Ignidoh", "velka_32"},
+                {"Mansionright", "faen_35"},
+                {"Mortis", "ulmin_56"},
+                {"Tulah", "lair_8"},
+                {"Ylmer", "sen_33"},
+                {"belphyor", "secta_5"},
+                {"belphyorquest", "velka_8"},
+                {"burninghand", "velka_25"},
+                {"dreadhalfman", "dread_11"},
+                {"elvenarmory", "faen_29"},
+                {"elvenarmoryplus", "faen_29"},
+                {"goblintown", "velka_6"},
+                {"harpychest", "velka_27"},
+                {"harpyfight", "velka_27"},
+                {"khazakdhum", "velka_29"},
+                {"kingrat", "sewers_8"},
+                {"minotaurcave", "velka_9"},
+                {"sahtikraken", "sahti_65"},
+                {"sahtikrakenmjolmir", "sahti_65"},
+                {"sahtirustkingtreasure", "sahti_62"},
+                {"spiderqueen", "sen_1"},
+                {"tyrant", "faen_25"},
+                {"tyrantbeavers", "faen_25"},
+                {"tyrantchampy", "faen_25"},
+                {"tyrantchompy", "faen_25"},
+                {"tyrantchumpy", "faen_25"},
+                {"upripreboss", "uprising_13"},
+                {"yogger", "sen_27"},
+            };
+            List<string> itemsToFind = [];
+
+            int nSeeds = 5000;
+
+            for (int i = 0; i < nSeeds; i++)
+            {
+                string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                List<string> itemsFound =[];
+                foreach (string lootDrop in allItemDropLocations.Keys)
+                {   
+                    string lootLocation = allItemDropLocations[lootDrop];
+                    List<string> itemList = GetItemsFromSeed(_seed:randomSeed,_shop:lootDrop,_node:lootLocation, _madness:1,_corruptorCount:0);
+
+                }
+   
+            }
         }
 
         public static void LogAllItems()
         {  
             LogInfo("LogAllItems - Start");
-            // LogCaravanItems();
-            // LogGuaranteedDropItems();
-            // LogBossDropItems();
+            LogCaravanItems();
+            LogGuaranteedDropItems();
+            LogBossDropItems();
             LogPetItems();
-            // LogMythicItems();
+            LogMythicItems();
             
         }
 
@@ -108,6 +408,7 @@ namespace SeedSearcher
                 {"warenavalea", "voidlow_4"},
                 {"wareweap1", "voidlow_4"},
                 {"wareweap2", "voidlow_4"},
+                
             };
             int nSeeds = 2000;
             HandleMythics(MythicLocations,nSeeds,rareOnly:false);

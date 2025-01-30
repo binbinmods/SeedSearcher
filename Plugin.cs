@@ -52,6 +52,7 @@ namespace SeedSearcher{
 
             // apply patches
             if(RunSeedSearcher.Value){
+                LogDebug("Patching");
                 harmony.PatchAll();
                 // SeedSearcher.LogAllItems();
                 
