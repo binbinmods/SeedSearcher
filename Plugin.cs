@@ -22,6 +22,8 @@ namespace SeedSearcher{
         
         
         public static ConfigEntry<bool> RunSeedSearcher { get; set; }
+        public static ConfigEntry<bool> SearchCaravansForEpicPairs { get; set; }
+        public static ConfigEntry<int> NumberOfSeeds { get; set; }
         internal int ModDate = int.Parse(DateTime.Today.ToString("yyyyMMdd"));
         private readonly Harmony harmony = new(PluginInfo.PLUGIN_GUID);
         internal static ManualLogSource Log;
@@ -36,7 +38,9 @@ namespace SeedSearcher{
             Log.LogInfo($"{PluginInfo.PLUGIN_GUID} {PluginInfo.PLUGIN_VERSION} has loaded!");
             
             // Sets the title, default values, and descriptions
-            RunSeedSearcher = Config.Bind(new ConfigDefinition("RunSeedSearcher", "RunSeedSearcher"), true, new ConfigDescription("If false, disables the mod. Restart the game upon changing this setting."));
+            RunSeedSearcher = Config.Bind(new ConfigDefinition("SeedSearcher", "RunSeedSearcher"), true, new ConfigDescription("If false, disables the mod. Restart the game upon changing this setting."));
+            SearchCaravansForEpicPairs = Config.Bind(new ConfigDefinition("SeedSearcher", "SearchCaravansForEpicPairs"), false, new ConfigDescription("Has the game search through seeds on startup for a predefined list of epic pairs. Pairs are stored in the LogOutput.log file. Do not reload the game. To run this, set this value to true and then restart your game. "));
+            NumberOfSeeds = Config.Bind(new ConfigDefinition("SeedSearcher", "Seeds to Search"), 2000000, new ConfigDescription("Number of seeds to search through (I believe it takes around 10 minutes to search through 1 millions seeds)"));
             
             // Register with Obeliskial Essentials, delete this if you don't need it.
             // RegisterMod(

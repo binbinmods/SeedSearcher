@@ -1,3 +1,7 @@
+# 1.1.0
+
+Added ability to search for specific caravan epic pairs (must be hard coded for now)
+
 # 1.0.2
 
 Added ability to search for a single seed (backend)
