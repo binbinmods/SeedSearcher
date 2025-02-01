@@ -79,7 +79,7 @@ namespace SeedSearcher
             // LogAllItems();
             // FindSeedWithItems();
             // CheckSingleSeed("QB2WCZW");
-            // int nSeeds = 1000000;
+            
 
             Dictionary<string, string> itemsAndShops = new() {
                 {"lightningspear","caravanshop"},
@@ -101,19 +101,22 @@ namespace SeedSearcher
 
             // 
             LogDebug(SearchCaravansForEpicPairs.Value.ToString());
-            if(SearchCaravansForEpicPairs.Value)
+            // if(SearchCaravansForEpicPairs.Value)
+            if(true)
             {
-                List<(string, string)> l = [("destroyergauntlet","shacklesofwar"),
-                                        ("glacialhammer","frostfirering"),
-                                        ("theporcupine","spikedshoulderpads"),
-                                        ("curseddagger","yinyangbadge"),
-                                        ("terrorring","yinyangbadge"),
-                                        ("terrorring","singingsword"),
-                                        ("darkhood","assassintools"),
-                                        ("fountainpen","cloackofspeed"),
-                                        ("fountainpen","steadfastboots"),
+                List<(string, string)> l = [
+                                        // ("destroyergauntlets","shacklesofwar"),
+                                        ("glacialhammer","frostfireringrare"),
+                                        // ("theporcupine","spikedshoulderpads"),
+                                        // ("curseddagger","yinyangbadge"),
+                                        // ("terrorring","yinyangbadge"),
+                                        // ("terrorring","singingsword"),
+                                        // ("darkhood","assassintools"),
+                                        // ("fountainpen","cloackofspeed"),
+                                        // ("fountainpen","steadfastboots"),
                                         ];
-                int nSeeds = NumberOfSeeds.Value;
+                // int nSeeds = NumberOfSeeds.Value;
+                int nSeeds = 2_000_000;
                 string seed = DoubleCaravanEpics(l,nSeeds);
                 LogDebug($"Seed meeting conditions: {seed}");
             }
@@ -138,13 +141,22 @@ namespace SeedSearcher
 
         }
 
+        private static System.Random random = new System.Random();
+
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
         internal static string DoubleCaravanEpics(List<(string, string)> listOfPairs, int nSeeds )
         {
             // int nSeeds = 10_000_000;
             StringBuilder foundItems = new();
             for (int i = 0; i < nSeeds; i++)
             {
-                string randomSeed = Functions.RandomStringSafe(10f).ToUpper();
+                string randomSeed = RandomString(8);
                 if (i % 100000 == 0) { LogDebug($"On Seed {i}: {randomSeed}"); }                
 
                 List<string> itemList = GetItemsFromSeed(_seed: randomSeed, _shop: "caravanshop", _node: "sen_44", _madness: 1, _corruptorCount: 0);
@@ -217,7 +229,7 @@ namespace SeedSearcher
             for (int i = 0; i < nSeeds; i++)
             {
 
-                string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                string randomSeed = RandomString(8).ToUpper();
                 if (i % 10000 == 0) { LogDebug($"On Seed {i}: {randomSeed}"); }
                 if (CheckSingleSeed(randomSeed, itemsAndShops, madness: madness, corruptorCount: corruptorCount))
                 {
@@ -409,7 +421,7 @@ namespace SeedSearcher
 
             for (int i = 0; i < nSeeds; i++)
             {
-                string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                string randomSeed = RandomString(8).ToUpper();
                 List<string> itemsFound = [];
                 foreach (string lootDrop in allItemDropLocations.Keys)
                 {
@@ -472,7 +484,7 @@ namespace SeedSearcher
                 LogDebug($"Searching Location {location}");
                 for (int i = 0; i < nSeeds; i++)
                 {
-                    string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                    string randomSeed = RandomString(7).ToUpper();
                     string node = lootNodeMap[location];
                     List<string> itemList = GetItemsFromSeed(_seed: randomSeed, _shop: location, _node: node, _madness: 1, _corruptorCount: 0);
                     // LogDebug($"Shop - {shop} itemList Items - {string.Join(", ",itemList)}");
@@ -709,7 +721,7 @@ namespace SeedSearcher
 
                 for (int i = 0; i < nSeeds; i++)
                 {
-                    string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                    string randomSeed = RandomString(7).ToUpper();
                     string node = lootNodeMap[shop];
                     List<string> itemList = GetItemsFromSeed(_seed: randomSeed, _shop: shop, _node: node, _madness: 1, _corruptorCount: 0);
                     // LogDebug($"Shop - {shop} itemList Items - {string.Join(", ",itemList)}");
@@ -749,7 +761,7 @@ namespace SeedSearcher
             for (int i = 0; i < nSeeds; i++)
             {
                 // string testSeed = testSeeds[i];
-                string randomSeed = Functions.RandomStringSafe(7f).ToUpper();
+                string randomSeed = RandomString(7).ToUpper();
 
                 string shop = "caravanshop";
                 string node = "sen_44";

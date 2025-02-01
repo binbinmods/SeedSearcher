@@ -12,7 +12,7 @@ Planned to allow you to choose what item(s) you want and then it will find a see
 1. Click `Manual Download` at the top of the page.
 2. Extract the files from the `.zip` somewhere same.
 2. Navigate to the `BepInEx` directory. You can do this in Steam, right-click Across the Obelisk and select `Manage -> Browse local files_`
-3. Copy the `com.binbin.SeedSearcher.dll` from the extracted `SeedSearcher\BepInEx\plugins` to `AcrossTheObelisk\BepInEx\plugins`
+3. Copy the `com.binbin.definiteseeds.dll` from the extracted `DefiniteSeeds\BepInEx\plugins` to `AcrossTheObelisk\BepInEx\plugins`
 4. Depending on your extraction tool, you can directly extracting the mod directly into your `BepInEx` folder. 
 
 ## Installation (automatic)
@@ -23,7 +23,7 @@ Planned to allow you to choose what item(s) you want and then it will find a see
 
 ## Support
 
-This has been updated for version 1.4.5.
+This has been updated for version 1.5.0.1.
 
 Hope you enjoy it and if have any issues, ping me in Discord or make a post in the **modding #support-and-requests** channel of the [official Across the Obelisk Discord](https://discord.gg/across-the-obelisk-679706811108163701).
 
