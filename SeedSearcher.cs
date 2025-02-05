@@ -79,61 +79,47 @@ namespace SeedSearcher
             // LogAllItems();
             // FindSeedWithItems();
             // CheckSingleSeed("QB2WCZW");
-            
 
-            Dictionary<string, string> itemsAndShops = new() {
-                {"lightningspear","caravanshop"},
-                {"chargedtridentrare","rubychest"}
-                };
 
-            Dictionary<string, string> itemsAndShops2 = new() {
-                {"paladingauntletsrare","elvenarmoryplus"},
-                {"lightbringerrare","voidtwins"}
-                };
 
-            Dictionary<string, string> itemsAndShops3 = new() {
-                // {"krakensushirare","sahtikrakenmjolmir"},
-                // {"purpletentaclerare","sahtikrakenmjolmir"},
-                {"mjolnirrare","sahtikrakenmjolmir"},
-                {"strawhatrare","voidtreasurejade"},
-                // {"jollyrogerrare","sahtirustkingtreasure"},
-                };
 
             // 
             LogDebug(SearchCaravansForEpicPairs.Value.ToString());
             // if(SearchCaravansForEpicPairs.Value)
-            if(true)
+            bool f = false;
+
+            if (f)
             {
                 List<(string, string)> l = [
-                                        // ("destroyergauntlets","shacklesofwar"),
-                                        ("glacialhammer","frostfireringrare"),
-                                        // ("theporcupine","spikedshoulderpads"),
-                                        // ("curseddagger","yinyangbadge"),
-                                        // ("terrorring","yinyangbadge"),
-                                        // ("terrorring","singingsword"),
-                                        // ("darkhood","assassintools"),
-                                        // ("fountainpen","cloackofspeed"),
-                                        // ("fountainpen","steadfastboots"),
+                                        ("holyhammerrare","justicarring"),
                                         ];
                 // int nSeeds = NumberOfSeeds.Value;
                 int nSeeds = 2_000_000;
-                string seed = DoubleCaravanEpics(l,nSeeds);
+                string seed = DoubleCaravanEpics(l, nSeeds);
                 LogDebug($"Seed meeting conditions: {seed}");
             }
-            bool f = false;
-            if(f)
+            if (!f)
             {
-                int nSeeds = NumberOfSeeds.Value;
-                string seedInfo = CheckSeeds(itemsAndShops, nSeeds, madness: 1, corruptorCount: 0);
-                LogDebug($"List of Seeds with good things: \n {seedInfo}");
+                Dictionary<string, string> itemsAndShops = new() {
+                    {"ravenstaff","caravanshop"},
+                    {"clairvoyantscroll","caravanshop"},
+                    // {"smallchest2","voidtwins"},
+                    // {"smallchest3","voidtsnemo"},
+
+                };
+                LogDebug("dict init");
+
+                int nSeeds = 1_000_000;
+                List<string> seedInfo = CheckSeeds(itemsAndShops, nSeeds, madness: 1, corruptorCount: 0);
+                LogDebug($"List of Seeds with good things: \n {string.Join(", ", seedInfo)}");
             }
-            
+
 
             LogInfo($"CreateGameContentPostfix - END ");
         }
 
 
-        internal static void ListInfoFromSeed(string seed, string shop, string node)
+        internal static void LogListInfoFromSeed(string seed, string shop, string node)
         {
             List<string> itemList = GetItemsFromSeed(_seed: seed, _shop: shop, _node: node, _madness: 1, _corruptorCount: 0);
             LogDebug(seed);
@@ -141,7 +127,7 @@ namespace SeedSearcher
 
         }
 
-        private static System.Random random = new System.Random();
+        private static System.Random random = new();
 
         public static string RandomString(int length)
         {
@@ -150,26 +136,26 @@ namespace SeedSearcher
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        internal static string DoubleCaravanEpics(List<(string, string)> listOfPairs, int nSeeds )
+        internal static string DoubleCaravanEpics(List<(string, string)> listOfPairs, int nSeeds)
         {
             // int nSeeds = 10_000_000;
             StringBuilder foundItems = new();
             for (int i = 0; i < nSeeds; i++)
             {
-                string randomSeed = RandomString(8);
-                if (i % 100000 == 0) { LogDebug($"On Seed {i}: {randomSeed}"); }                
+                string randomSeed = RandomString(8).ToUpper();
+                if (i % 100_000 == 0) { LogDebug($"On Seed {i}: {randomSeed}"); }
 
                 List<string> itemList = GetItemsFromSeed(_seed: randomSeed, _shop: "caravanshop", _node: "sen_44", _madness: 1, _corruptorCount: 0);
 
-                
-                if(ItemListContains(itemList, "darkhood")&& ItemListContains(itemList, "assassintools") && (ItemListContains(itemList, "longbow") || ItemListContains(itemList, "twinblades")) && ItemListContains(itemList,"brassamulet"))
+
+                if (ItemListContains(itemList, "darkhood") && ItemListContains(itemList, "assassintools") && (ItemListContains(itemList, "longbow") || ItemListContains(itemList, "twinblades")) && ItemListContains(itemList, "brassamulet"))
                 {
                     LogDebug($"FOUND THE PERFECT DARKHOOD/ASSASSIN TOOL SEED + {randomSeed}");
                 }
 
                 foreach ((string, string) pair in listOfPairs)
                 {
-                    if ((itemList.Contains(pair.Item1)||itemList.Contains(pair.Item1+"rare")) && (itemList.Contains(pair.Item2)||itemList.Contains(pair.Item2+"rare")))
+                    if ((itemList.Contains(pair.Item1) || itemList.Contains(pair.Item1 + "rare")) && (itemList.Contains(pair.Item2) || itemList.Contains(pair.Item2 + "rare")))
                     {
                         foundItems.Append($"{randomSeed} - {pair.Item1} and {pair.Item2} \n");
                         LogDebug($"{randomSeed} - {pair.Item1} and {pair.Item2}");
@@ -185,7 +171,7 @@ namespace SeedSearcher
 
         public static bool ItemListContains(List<string> itemList, string item)
         {
-            return itemList.Contains(item)||itemList.Contains(item+"rare");
+            return itemList.Contains(item) || itemList.Contains(item + "rare");
         }
 
         internal static bool CheckSingleSeed(string seed, Dictionary<string, string> itemsAndShops, int madness = 1, int corruptorCount = 0)
@@ -196,7 +182,7 @@ namespace SeedSearcher
                 // {"apprentince", "sen_24"}, {"balanceblack", "ulmin_52"}, {"balanceboth", "ulmin_52"}, {"balancewhite", "ulmin_52"}, {"battlefield", "aqua_6"}, {"bridge", "sen_17"}, {"chappel", "sen_21"}, {"crane", "velka_21"}, {"crocoloot", "aqua_7"}, {"crocosmugglers", "aqua_48"}, {"desertreliquary", "ulmin_58"}, {"dreadcosme", "dread_2"}, {"dreadcuthbert", "dread_2"}, {"dreadfrancis", "dread_2"}, {"dreadhoratio", "dread_2"}, {"dreadjack", "dread_2"}, {"dreadmimic", "dread_10"},                                
                 // {"dreadrhodogor", "dread_2"}, {"eeriechest_a", "sen_6"}, {"eeriechest_b", "sen_6"}, {"lavacascade", "velka_22"}, {"lootedarmory", "pyr_10"}, {"obsidianall", "forge_3"}, {"obsidiananvil", "forge_3"}, {"obsidianboots", "forge_3"}, {"obsidianrings", "forge_3"}, {"obsidianrods", "forge_3"}, {"rift", "velka_40"}, {"riftsen", "sen_48"}, {"sahtibernardstash", "sahti_52"}, {"sahtidomedesert", "sahti_49"}, {"sahtidomeice", "sahti_49"}, {"sahtidomemain", "sahti_49"}, {"sahtidomemountain", "sahti_49"}, {"sahtidomeswamp", "sahti_49"}, {"sahtipiratearsenal", "sahti_25"}, {"sahtipiratewarehouse", "sahti_25"}, {"sahtiplaguecot", "sahti_11"}, {"sahtisurgeonarsenal", "sahti_13"}, {"sahtisurgeonstash", "sahti_13"}, {"sahtitreasurechamber", "sahti_25"}, {"sahtivalkyriestash", "sahti_19"}, {"thorimsrod", "forge_8"}, {"treasureaquarfall", "aqua_28"}, {"uprienergy", "uprising_5"}, {"uprimagma", "uprising_4"}, {"voidcraftemerald", "voidlow_14"}, {"voidcraftgolden", "voidlow_14"}, {"voidcraftobsidian", "voidlow_14"}, {"voidcraftpearl", "voidlow_14"}, {"voidcraftring", "voidlow_14"}, {"voidcraftruby", "voidlow_14"}, {"voidcraftsapphire", "voidlow_14"}, {"voidcrafttopaz", "voidlow_14"}, {"voidtreasurejade", "voidlow_16"}, {"watermill", "sen_15"},
                 // {"Jelly", "aqua_41"}, {"betty", "sen_39"}, {"blobbleed", "sen_29"}, {"blobcold", "sewers_13"}, {"blobdire", "velka_37"}, {"blobholy", "pyr_12"}, {"bloblightning", "sahti_30"}, {"blobmetal", "velka_38"}, {"blobmind", "dread_7"}, {"blobpoison", "aqua_44"}, {"blobselem", "voidlow_28"}, {"blobshadow", "ulmin_59"}, {"blobsmyst", "voidlow_28"}, {"blobsphys", "voidlow_28"}, {"blobwater", "aqua_45"}, {"cuby", "pyr_9"}, {"cubyd", "pyr_9"}, {"daley", "faen_7"}, {"fenny", "ulmin_6"}, {"fishlava", "forge_8"}, {"inky", "aqua_41"}, {"liante", "spider_5"}, {"matey", "sahti_20"}, {"mimy", "dread_10"}, {"oculy", "aqua_41"}, {"sharpy", "aqua_18"}, {"slimy", "spider_7"}, {"stormy", "aqua_24"}, {"wolfy", "sen_46"},
-                {"rubychest","aqua_20"},{"rubyrefuges","aqua_20"},{"caravanshop", "sen_44"},{"Basthet", "pyr_7"}, {"Dryad_a", "sen_31"}, {"Dryad_b", "sen_32"}, {"Faeborg", "faen_38"}, {"Hydra", "aqua_35"}, {"Ignidoh", "velka_32"}, {"Mansionright", "faen_35"}, {"Mortis", "ulmin_56"}, {"Tulah", "spider_8"}, {"Ylmer", "sen_33"}, {"belphyor", "secta_5"}, {"belphyorquest", "velka_8"}, {"burninghand", "velka_25"}, {"dreadhalfman", "dread_11"}, {"elvenarmory", "faen_29"}, {"elvenarmoryplus", "faen_29"}, {"goblintown", "velka_6"}, {"harpychest", "velka_27"}, {"harpyfight", "velka_27"}, {"khazakdhum", "velka_29"}, {"kingrat", "sewers_8"}, {"minotaurcave", "velka_9"}, {"sahtikraken", "sahti_65"}, {"sahtikrakenmjolmir", "sahti_65"}, {"sahtirustkingtreasure", "sahti_62"}, {"spiderqueen", "sen_1"}, {"tyrant", "faen_25"}, {"tyrantbeavers", "faen_25"}, {"tyrantchampy", "faen_25"}, {"tyrantchompy", "faen_25"}, {"tyrantchumpy", "faen_25"}, {"upripreboss", "uprising_13"}, {"yogger", "sen_27"},{"voidtwins", "voidlow_25"},{"voidtreasurejade", "voidlow_16"}
+                {"voidtsnemo", "voidlow_24"},{"voidshop", "voidlow_8"},{"rubychest","aqua_20"},{"rubyrefuges","aqua_20"},{"caravanshop", "sen_44"},{"Basthet", "pyr_7"}, {"Dryad_a", "sen_31"}, {"Dryad_b", "sen_32"}, {"Faeborg", "faen_38"}, {"Hydra", "aqua_35"}, {"Ignidoh", "velka_32"}, {"Mansionright", "faen_35"}, {"Mortis", "ulmin_56"}, {"Tulah", "spider_8"}, {"Ylmer", "sen_33"}, {"belphyor", "secta_5"}, {"belphyorquest", "velka_8"}, {"burninghand", "velka_25"}, {"dreadhalfman", "dread_11"}, {"elvenarmory", "faen_29"}, {"elvenarmoryplus", "faen_29"}, {"goblintown", "velka_6"}, {"harpychest", "velka_27"}, {"harpyfight", "velka_27"}, {"khazakdhum", "velka_29"}, {"kingrat", "sewers_8"}, {"minotaurcave", "velka_9"}, {"sahtikraken", "sahti_65"}, {"sahtikrakenmjolmir", "sahti_65"}, {"sahtirustkingtreasure", "sahti_62"}, {"spiderqueen", "sen_1"}, {"tyrant", "faen_25"}, {"tyrantbeavers", "faen_25"}, {"tyrantchampy", "faen_25"}, {"tyrantchompy", "faen_25"}, {"tyrantchumpy", "faen_25"}, {"upripreboss", "uprising_13"}, {"yogger", "sen_27"},{"voidtwins", "voidlow_25"},{"voidtreasurejade", "voidlow_16"}
             };
             // string shop = "sahtikrakenmjolmir";   
             // string lootLocation = "sahti_65";
@@ -205,39 +191,42 @@ namespace SeedSearcher
             foreach (KeyValuePair<string, string> itemShopPair in itemsAndShops)
             {
                 string item = itemShopPair.Key;
+                item = char.IsDigit(item[item.Length - 1]) ? item.Remove(item.Length - 1) : item;
                 string shop = itemShopPair.Value;
                 string lootLocation = allLootLocations.ContainsKey(shop) ? allLootLocations[shop] : "";
                 if (lootLocation == "") { LogDebug($"improper LootLocation - {shop}"); return false; }
                 List<string> itemList = GetItemsFromSeed(_seed: seed, _shop: shop, _node: lootLocation, _madness: madness, _corruptorCount: corruptorCount);
-                if(itemList.Contains(""))
+                // if(itemList.Contains(""))
                 if (!itemList.Contains(item))
                 {
-                    
+
                     return false;
                 }
             }
-
-
-
             return true;
         }
 
-        internal static string CheckSeeds(Dictionary<string, string> itemsAndShops, int nSeeds, int madness = 1, int corruptorCount = 0)
+        internal static List<string> CheckSeeds(Dictionary<string, string> itemsAndShops, int nSeeds, int madness = 1, int corruptorCount = 0)
         {
             LogDebug("CheckSeeds - Begin");
-            string correctSeed = "";
+            // string correctSeed = "";
+            List<string> foundSeeds = [];
             for (int i = 0; i < nSeeds; i++)
             {
 
                 string randomSeed = RandomString(8).ToUpper();
-                if (i % 10000 == 0) { LogDebug($"On Seed {i}: {randomSeed}"); }
+                if (i % 50_000 == 0) { LogDebug($"On Seed {i}: {randomSeed}"); }
                 if (CheckSingleSeed(randomSeed, itemsAndShops, madness: madness, corruptorCount: corruptorCount))
                 {
-                    correctSeed = randomSeed;
-                    break;
+                    foundSeeds.Append(randomSeed);
+                    List<string> items = itemsAndShops.Keys.ToList();
+                    string foundStuff = string.Join(", ", items);
+                    LogInfo($"Found Seed with {foundStuff}: {randomSeed}");
+                    // correctSeed = randomSeed;
+                    // break;
                 }
             }
-            return correctSeed;
+            return foundSeeds;
         }
 
 
