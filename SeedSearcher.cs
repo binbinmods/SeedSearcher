@@ -76,9 +76,10 @@ namespace SeedSearcher
             // string shop = "rubychest";
             // string node = "aqua_20";
             // ListInfoFromSeed(seed2,shop,node);
-            // LogAllItems();
+            LogAllItems();
             // FindSeedWithItems();
             // CheckSingleSeed("QB2WCZW");
+            
 
 
 
@@ -88,17 +89,17 @@ namespace SeedSearcher
             // if(SearchCaravansForEpicPairs.Value)
             bool f = false;
 
+            // if (f)
+            // {
+            //     List<(string, string)> l = [
+            //                             ("holyhammerrare","justicarring"),
+            //                             ];
+            //     // int nSeeds = NumberOfSeeds.Value;
+            //     int nSeeds = 2_000_000;
+            //     string seed = DoubleCaravanEpics(l, nSeeds);
+            //     LogDebug($"Seed meeting conditions: {seed}");
+            // }
             if (f)
-            {
-                List<(string, string)> l = [
-                                        ("holyhammerrare","justicarring"),
-                                        ];
-                // int nSeeds = NumberOfSeeds.Value;
-                int nSeeds = 2_000_000;
-                string seed = DoubleCaravanEpics(l, nSeeds);
-                LogDebug($"Seed meeting conditions: {seed}");
-            }
-            if (!f)
             {
                 Dictionary<string, string> itemsAndShops = new() {
                     {"ravenstaff","caravanshop"},
