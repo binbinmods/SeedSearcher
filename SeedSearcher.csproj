@@ -45,6 +45,7 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="../../../plugins" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="SeedSearcher/BepInEx/plugins" />
+    
   </Target>
 
 </Project>
