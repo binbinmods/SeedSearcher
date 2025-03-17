@@ -82,7 +82,7 @@ namespace SeedSearcher
             // CheckSingleSeed("QB2WCZW");
                         
             
-            LogDebug(SearchCaravansForEpicPairs.Value.ToString());
+            // LogDebug(SearchCaravansForEpicPairs.Value.ToString());
             // if(SearchCaravansForEpicPairs.Value)
             bool f = false;
 
@@ -96,19 +96,19 @@ namespace SeedSearcher
             //     string seed = DoubleCaravanEpics(l, nSeeds);
             //     LogDebug($"Seed meeting conditions: {seed}");
             // }
-            if (f)
+            if (!f)
             {
-                Dictionary<string, string> itemsAndShops = new() {
-                    {"ravenstaff","caravanshop"},
-                    {"clairvoyantscroll","caravanshop"},
+                Dictionary<string, string> itemsMappedToShop = new() {
+                    {"piggybank","chappel"},
+                    {"piggybank2","towntier0_b"},                    
                     // {"smallchest2","voidtwins"},
                     // {"smallchest3","voidtsnemo"},
 
                 };
                 LogDebug("dict init");
 
-                int nSeeds = 1_000_000;
-                List<string> seedInfo = CheckSeeds(itemsAndShops, nSeeds, madness: 1, corruptorCount: 0);
+                int nSeeds = 100_000; 
+                List<string> seedInfo = CheckSeeds(itemsMappedToShop, nSeeds, madness: 1, corruptorCount: 0);
                 LogDebug($"List of Seeds with good things: \n {string.Join(", ", seedInfo)}");
             }
             
@@ -118,7 +118,7 @@ namespace SeedSearcher
                 ("bloodblobpetrare","blobbleed","faen_41"),
                 ("bloodblobpetrare","blobsphys","voidlow_28"),
             ];
-            LogSeedsNodeSpecified(thingsToSearch, nSeeds: 1_000_000);
+            // LogSeedsNodeSpecified(thingsToSearch, nSeeds: 1_000_000);
 
             List<(string,string)> eventsToFind =
             [
@@ -128,10 +128,6 @@ namespace SeedSearcher
                 // ("bloodblobpetrare","blobsphys","voidlow_28"),
             ];
 
-            // string seed = "HELLO";
-            // string node = "sen_29";
-            // string eventId = "e_sen29_a";
-            // List<string> eventsToFind = ["e_sen29_a"];
             
             
         }

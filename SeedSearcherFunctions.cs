@@ -32,10 +32,10 @@ namespace SeedSearcher
 #pragma warning disable Harmony003 // Harmony non-ref patch parameters modified
         public static Dictionary<string, string> allLootLocations = new() {
             // {"towntier3", "voidlow_1"}, {"towntier3_a", "voidlow_1"}, {"towntier3_b", "voidlow_1"}, {"ruinedplaza", "voidlow_5"}, {"ruinedplaza_crit", "voidlow_5"}, {"voidasmody", "voidhigh_6"}, {"voidshop", "voidlow_8"}, {"voidtreasure", "voidlow_16"}, {"voidtreasurejade", "voidlow_16"}, {"voidtsnemo", "voidlow_24"}, {"voidtwins", "voidlow_25"}, {"wareacc1", "voidlow_4"}, {"wareacc2", "voidlow_4"}, {"warearm1", "voidlow_4"}, {"warearm2", "voidlow_4"}, {"warejew1", "voidlow_4"}, {"warejew2", "voidlow_4"}, {"warenavalea", "voidlow_4"}, {"wareweap1", "voidlow_4"}, {"wareweap2", "voidlow_4"}, {"aquarvendor","aqua_26"}, {"elvenemporium","faen_23"}, {"felineshop","ulmin_29"}, {"firebazaar","velka_20"}, {"heronshop","ulmin_27"}, {"Merchantwares","velka_7"}, {"voidshop","voidlow_8"}, {"voidtsnemo","voidlow_24"}, {"voodooshop", "aqua_23"}, {"Jeweler","sen_35"}, {"gobletsmerchant","sewers_4"}, {"werewolfstall_a","sen_30"}, {"werewolfstall_b","sen_30"}, {"FrozenSewersElves", "sewers_11"}, {"FrozenSewersMix", "sewers_11"}, {"FrozenSewersRatmen", "sewers_11"}, {"Jewelerrings", "sen_35"}, {"Mansionleft", "faen_35"}, {"Mansionleftplus", "faen_35"}, {"Sailor", "faen_4"}, {"Stolenitems", "faen_10"}, 
-            // {"apprentince", "sen_24"}, {"balanceblack", "ulmin_52"}, {"balanceboth", "ulmin_52"}, {"balancewhite", "ulmin_52"}, {"battlefield", "aqua_6"}, {"bridge", "sen_17"}, {"chappel", "sen_21"}, {"crane", "velka_21"}, {"crocoloot", "aqua_7"}, {"crocosmugglers", "aqua_48"}, {"desertreliquary", "ulmin_58"}, {"dreadcosme", "dread_2"}, {"dreadcuthbert", "dread_2"}, {"dreadfrancis", "dread_2"}, {"dreadhoratio", "dread_2"}, {"dreadjack", "dread_2"}, {"dreadmimic", "dread_10"},                                
+            // {"apprentince", "sen_24"}, {"balanceblack", "ulmin_52"}, {"balanceboth", "ulmin_52"}, {"balancewhite", "ulmin_52"}, {"battlefield", "aqua_6"}, {"bridge", "sen_17"},  {"crane", "velka_21"}, {"crocoloot", "aqua_7"}, {"crocosmugglers", "aqua_48"}, {"desertreliquary", "ulmin_58"}, {"dreadcosme", "dread_2"}, {"dreadcuthbert", "dread_2"}, {"dreadfrancis", "dread_2"}, {"dreadhoratio", "dread_2"}, {"dreadjack", "dread_2"}, {"dreadmimic", "dread_10"},                                
             // {"dreadrhodogor", "dread_2"}, {"eeriechest_a", "sen_6"}, {"eeriechest_b", "sen_6"}, {"lavacascade", "velka_22"}, {"lootedarmory", "pyr_10"}, {"obsidianall", "forge_3"}, {"obsidiananvil", "forge_3"}, {"obsidianboots", "forge_3"}, {"obsidianrings", "forge_3"}, {"obsidianrods", "forge_3"}, {"rift", "velka_40"}, {"riftsen", "sen_48"}, {"sahtibernardstash", "sahti_52"}, {"sahtidomedesert", "sahti_49"}, {"sahtidomeice", "sahti_49"}, {"sahtidomemain", "sahti_49"}, {"sahtidomemountain", "sahti_49"}, {"sahtidomeswamp", "sahti_49"}, {"sahtipiratearsenal", "sahti_25"}, {"sahtipiratewarehouse", "sahti_25"}, {"sahtiplaguecot", "sahti_11"}, {"sahtisurgeonarsenal", "sahti_13"}, {"sahtisurgeonstash", "sahti_13"}, {"sahtitreasurechamber", "sahti_25"}, {"sahtivalkyriestash", "sahti_19"}, {"thorimsrod", "forge_8"}, {"treasureaquarfall", "aqua_28"}, {"uprienergy", "uprising_5"}, {"uprimagma", "uprising_4"}, {"voidcraftemerald", "voidlow_14"}, {"voidcraftgolden", "voidlow_14"}, {"voidcraftobsidian", "voidlow_14"}, {"voidcraftpearl", "voidlow_14"}, {"voidcraftring", "voidlow_14"}, {"voidcraftruby", "voidlow_14"}, {"voidcraftsapphire", "voidlow_14"}, {"voidcrafttopaz", "voidlow_14"}, {"voidtreasurejade", "voidlow_16"}, {"watermill", "sen_15"},
             // {"Jelly", "aqua_41"}, {"betty", "sen_39"}, {"blobbleed", "sen_29"}, {"blobcold", "sewers_13"}, {"blobdire", "velka_37"}, {"blobholy", "pyr_12"}, {"bloblightning", "sahti_30"}, {"blobmetal", "velka_38"}, {"blobmind", "dread_7"}, {"blobpoison", "aqua_44"}, {"blobselem", "voidlow_28"}, {"blobshadow", "ulmin_59"}, {"blobsmyst", "voidlow_28"}, {"blobsphys", "voidlow_28"}, {"blobwater", "aqua_45"}, {"cuby", "pyr_9"}, {"cubyd", "pyr_9"}, {"daley", "faen_7"}, {"fenny", "ulmin_6"}, {"fishlava", "forge_8"}, {"inky", "aqua_41"}, {"liante", "spider_5"}, {"matey", "sahti_20"}, {"mimy", "dread_10"}, {"oculy", "aqua_41"}, {"sharpy", "aqua_18"}, {"slimy", "spider_7"}, {"stormy", "aqua_24"}, {"wolfy", "sen_46"},
-            {"voidtsnemo", "voidlow_24"},{"voidshop", "voidlow_8"},{"rubychest","aqua_20"},{"rubyrefuges","aqua_20"},{"caravanshop", "sen_44"},{"Basthet", "pyr_7"}, {"Dryad_a", "sen_31"}, {"Dryad_b", "sen_32"}, {"Faeborg", "faen_38"}, {"Hydra", "aqua_35"}, {"Ignidoh", "velka_32"}, {"Mansionright", "faen_35"}, {"Mortis", "ulmin_56"}, {"Tulah", "spider_8"}, {"Ylmer", "sen_33"}, {"belphyor", "secta_5"}, {"belphyorquest", "velka_8"}, {"burninghand", "velka_25"}, {"dreadhalfman", "dread_11"}, {"elvenarmory", "faen_29"}, {"elvenarmoryplus", "faen_29"}, {"goblintown", "velka_6"}, {"harpychest", "velka_27"}, {"harpyfight", "velka_27"}, {"khazakdhum", "velka_29"}, {"kingrat", "sewers_8"}, {"minotaurcave", "velka_9"}, {"sahtikraken", "sahti_65"}, {"sahtikrakenmjolmir", "sahti_65"}, {"sahtirustkingtreasure", "sahti_62"}, {"spiderqueen", "sen_1"}, {"tyrant", "faen_25"}, {"tyrantbeavers", "faen_25"}, {"tyrantchampy", "faen_25"}, {"tyrantchompy", "faen_25"}, {"tyrantchumpy", "faen_25"}, {"upripreboss", "uprising_13"}, {"yogger", "sen_27"},{"voidtwins", "voidlow_25"},{"voidtreasurejade", "voidlow_16"}
+            {"towntier0_b", "sen_41"}, {"chappel", "sen_21"}, {"voidtsnemo", "voidlow_24"},{"voidshop", "voidlow_8"},{"rubychest","aqua_20"},{"rubyrefuges","aqua_20"},{"caravanshop", "sen_44"},{"Basthet", "pyr_7"}, {"Dryad_a", "sen_31"}, {"Dryad_b", "sen_32"}, {"Faeborg", "faen_38"}, {"Hydra", "aqua_35"}, {"Ignidoh", "velka_32"}, {"Mansionright", "faen_35"}, {"Mortis", "ulmin_56"}, {"Tulah", "spider_8"}, {"Ylmer", "sen_33"}, {"belphyor", "secta_5"}, {"belphyorquest", "velka_8"}, {"burninghand", "velka_25"}, {"dreadhalfman", "dread_11"}, {"elvenarmory", "faen_29"}, {"elvenarmoryplus", "faen_29"}, {"goblintown", "velka_6"}, {"harpychest", "velka_27"}, {"harpyfight", "velka_27"}, {"khazakdhum", "velka_29"}, {"kingrat", "sewers_8"}, {"minotaurcave", "velka_9"}, {"sahtikraken", "sahti_65"}, {"sahtikrakenmjolmir", "sahti_65"}, {"sahtirustkingtreasure", "sahti_62"}, {"spiderqueen", "sen_1"}, {"tyrant", "faen_25"}, {"tyrantbeavers", "faen_25"}, {"tyrantchampy", "faen_25"}, {"tyrantchompy", "faen_25"}, {"tyrantchumpy", "faen_25"}, {"upripreboss", "uprising_13"}, {"yogger", "sen_27"},{"voidtwins", "voidlow_25"},{"voidtreasurejade", "voidlow_16"}
         };
 
         public static Dictionary<string, string> guaranteedDropNodeMap = new()
@@ -140,6 +140,9 @@ namespace SeedSearcher
 
         public static Dictionary<string, string> allItemDropLocations = new()
             {
+                {"towntier0", "sen_41"},
+                {"towntier0_a", "sen_41"},
+                {"towntier0_b", "sen_41"},                
                 {"towntier3", "voidlow_1"},
                 {"towntier3_a", "voidlow_1"},
                 {"towntier3_b", "voidlow_1"},
@@ -445,7 +448,8 @@ namespace SeedSearcher
                 string item = itemShopPair.Key;
                 item = char.IsDigit(item[item.Length - 1]) ? item.Remove(item.Length - 1) : item;
                 string shop = itemShopPair.Value;
-
+                // LogDebug($"Current item: {item}");
+                // LogDebug($"Current shop: {shop}");
                 if (!CheckSingleShop(item, shop, seed, madness, corruptorCount))
                 {
                     return false;
@@ -458,8 +462,9 @@ namespace SeedSearcher
         {
             string lootLocation = allLootLocations.ContainsKey(shop) ? allLootLocations[shop] : node;
             if (lootLocation == null) { LogDebug($"improper LootLocation - {shop}"); return false; }
-            if (!NodeExists(node, seed))
+            if (!NodeExists(lootLocation, seed))
             {
+                LogDebug($"CheckSingleShop null node: {lootLocation} in seed {seed}");
                 return false;
             }
             List<string> itemList = GetItemsFromSeed(_seed: seed, _shop: shop, _node: lootLocation, _madness: madness, _corruptorCount: corruptorCount);
@@ -471,7 +476,11 @@ namespace SeedSearcher
         {
             if (eventId == null)
             {
-                if (!NodeExists(node, seed)) { return false; }
+                if (!NodeExists(node, seed))
+                {
+                    LogDebug($"CheckSingleNodeAndShop null node: {node} in seed {seed}");
+                    return false;
+                }
             }
             else if (!EventExists(seed, node, eventId))
             {
@@ -500,8 +509,7 @@ namespace SeedSearcher
                     List<string> items = itemsAndShops.Keys.ToList();
                     string foundStuff = string.Join(", ", items);
                     LogInfo($"Found Seed with {foundStuff}: {randomSeed}");
-                    // correctSeed = randomSeed;
-                    // break;
+
                 }
             }
             return foundSeeds;
@@ -536,7 +544,8 @@ namespace SeedSearcher
                     break;
                 }
             }
-            LogDebug("Found Seeds with appropriate items: " + string.Join(", ", foundSeeds));
+            List<string> itemsSearchedFor = [.. from thing in thingsToSearch select thing.Item1];
+            LogDebug($"Found Seeds with the following items: {string.Join(", ", itemsSearchedFor)} \n  {string.Join(", ", foundSeeds)}");
             return;
         }
 
@@ -790,10 +799,14 @@ namespace SeedSearcher
             {
                 return false;
             }
-            NodeData node = Globals.Instance.GetNodeData(nodeId);
-            if (node == null)
+            if (nodeId == "caravanshop")
             {
-                LogDebug($"null node: {nodeId} in seed {seed}");
+                return true;
+            }
+            NodeData node = Globals.Instance.GetNodeData(nodeId);
+            if (node == null )
+            {
+                // LogDebug($"null node: {nodeId} in seed {seed}");
                 return false;
             }
 
