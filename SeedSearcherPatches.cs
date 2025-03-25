@@ -50,23 +50,6 @@ namespace SeedSearcher
         }
 
 
-        // [HarmonyPrefix]
-        // [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.SetGameId))]
-        // public static bool SetGameIdPrefix(ref AtOManager __instance, string _gameId = "")
-        // {
-        //     LogInfo("SetGameIdPrefix - Start");
-        //     string currId = __instance.GetGameId();
-        //     LogInfo($"SetGameIdPrefix - CurrentGameID = {currId}");
-
-        //     if (_gameId=="")
-        //     {
-        //         return false;
-        //     }
-        //     LogInfo("SetGameIdPrefix - End");
-
-        //     return true;
-        //     }
-
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Globals), nameof(Globals.CreateGameContent))]
         public static void CreateGameContentPostfix(ref Globals __instance)
@@ -80,8 +63,8 @@ namespace SeedSearcher
             // LogAllItems();
             // FindSeedWithItems();
             // CheckSingleSeed("QB2WCZW");
-                        
-            
+
+
             // LogDebug(SearchCaravansForEpicPairs.Value.ToString());
             // if(SearchCaravansForEpicPairs.Value)
             bool f = false;
@@ -96,31 +79,35 @@ namespace SeedSearcher
             //     string seed = DoubleCaravanEpics(l, nSeeds);
             //     LogDebug($"Seed meeting conditions: {seed}");
             // }
-            if (!f)
+            
+            // WriteItemsToJson();
+            
+
+            if (f)
             {
                 Dictionary<string, string> itemsMappedToShop = new() {
-                    {"piggybank","chappel"},
-                    {"piggybank2","towntier0_b"},                    
+                    {"blooddguard","caravanshop"},
+                    {"virulentring","caravanshop"},                    
                     // {"smallchest2","voidtwins"},
                     // {"smallchest3","voidtsnemo"},
 
                 };
                 LogDebug("dict init");
 
-                int nSeeds = 100_000; 
+                int nSeeds = 1_000_000;
                 List<string> seedInfo = CheckSeeds(itemsMappedToShop, nSeeds, madness: 1, corruptorCount: 0);
                 LogDebug($"List of Seeds with good things: \n {string.Join(", ", seedInfo)}");
             }
-            
-            List<(string,string,string)> thingsToSearch =
-            [                
-                ("bloodblobpetrare","blobbleed","sen_29"),
-                ("bloodblobpetrare","blobbleed","faen_41"),
-                ("bloodblobpetrare","blobsphys","voidlow_28"),
+
+            List<(string, string, string)> thingsToSearch =
+            [
+                ("blooddguardrare","caravanshop","sen_44"),
+                ("virulentring","caravanshop","sen_44"),
+                // ("bloodblobpetrare","blobsphys","voidlow_28"),
             ];
             // LogSeedsNodeSpecified(thingsToSearch, nSeeds: 1_000_000);
 
-            List<(string,string)> eventsToFind =
+            List<(string, string)> eventsToFind =
             [
                 ("sen_29", "e_sen29_a"),
                 // ("bloodblobpetrare","blobbleed","sen_29"),
@@ -128,10 +115,9 @@ namespace SeedSearcher
                 // ("bloodblobpetrare","blobsphys","voidlow_28"),
             ];
 
-            
-            
-        }
 
+
+        }
 
 
     }
