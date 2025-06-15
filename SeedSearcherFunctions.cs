@@ -144,7 +144,7 @@ namespace SeedSearcher
             {
                 {"towntier0", "sen_41"},
                 {"towntier0_a", "sen_41"},
-                {"towntier0_b", "sen_41"},                
+                {"towntier0_b", "sen_41"},
                 {"towntier3", "voidlow_1"},
                 {"towntier3_a", "voidlow_1"},
                 {"towntier3_b", "voidlow_1"},
@@ -577,18 +577,17 @@ namespace SeedSearcher
         public static void LogAllItems()
         {
             LogInfo("LogAllItems - Start");
-            LogCaravanItems();
-            LogGuaranteedDropItems();
-            LogBossDropItems();
-            LogPetItems();
-            LogMythicItems();
-
+            int nSeeds = 1_000_000;
+            LogCaravanItems(nSeeds);
+            nSeeds = 1_000;
+            LogGuaranteedDropItems(nSeeds);
+            LogBossDropItems(nSeeds);
+            LogPetItems(nSeeds);
+            LogMythicItems(2000);
         }
 
-        internal static void LogMythicItems()
+        internal static void LogMythicItems(int nSeeds = 2000)
         {
-
-            int nSeeds = 2000;
             HandleMythics(MythicLocations, nSeeds, rareOnly: false);
             LogInfo("Completed Mythic Items");
         }
@@ -806,7 +805,7 @@ namespace SeedSearcher
                 return true;
             }
             NodeData node = Globals.Instance.GetNodeData(nodeId);
-            if (node == null )
+            if (node == null)
             {
                 // LogDebug($"null node: {nodeId} in seed {seed}");
                 return false;
@@ -827,7 +826,7 @@ namespace SeedSearcher
                 {
                     string action = gameNodeAssigned[nodeId];
                     LogDebug(action);
-                    
+
                     return action.Split(':')[1] == hasEvent;
 
 
@@ -840,38 +839,40 @@ namespace SeedSearcher
 
 
 
-        internal static void LogPetItems()
+        internal static void LogPetItems(int nSeeds = 500)
         {
-            int nSeeds = 500;
+            // int nSeeds = 500;
             HandleDropItems(petDropNodeMap, nSeeds, rareOnly: true);
             LogInfo("Completed Pet Items");
         }
 
 
-        internal static void LogBossDropItems()
+        internal static void LogBossDropItems(int nSeeds = 500)
         {
 
-            int nSeeds = 500;
+            // int nSeeds = 500;
             HandleDropItems(dropNodeMap, nSeeds, rareOnly: true);
             LogInfo("Completed Boss Items");
         }
 
-        internal static void LogGuaranteedDropItems()
+        internal static void LogGuaranteedDropItems(int nSeeds = 500)
         {
 
-            int nSeeds = 500;
+            // int nSeeds = 500;
             HandleDropItems(guaranteedDropNodeMap, nSeeds, rareOnly: true);
             LogInfo("Completed Guaranteed Items");
 
         }
 
-        internal static void LogSingleShop(string shop, string seed, string node = null, int madness = 1, int corruptorCount = 0)
+        internal static void LogSingleShop(string shop, string seed, string node = null, int madness = 1, int corruptorCount = 0, bool poverty = false)
         {
             if (node == null)
             {
-
+                LogError("Node is null");
+                return;
             }
-            List<string> itemList = GetItemsFromSeed(_seed: seed, _shop: shop, _node: node, _madness: 1, _corruptorCount: 0);
+            List<string> itemList = GetItemsFromSeed(_seed: seed, _shop: shop, _node: node, _madness: 1, _corruptorCount: 0, _poverty: poverty);
+            LogDebug($"Shop - {shop} itemList Items - {string.Join(", ", itemList)}");
         }
 
         internal static void LogShopItems()
@@ -962,14 +963,18 @@ namespace SeedSearcher
             }
         }
 
-        internal static void LogCaravanItems()
+        internal static void LogCaravanItems(int nSeeds = 1_000)
         {
             Dictionary<string, List<string>> itemDict = [];
             // Dictionary<string,string> itemDict = [];
             // LogCaravanItems()
-            int nSeeds = 1000;
+
             for (int i = 0; i < nSeeds; i++)
             {
+                if (i % 50_000 == 0)
+                {
+                    LogDebug($"On seed {i}");
+                }
                 // string testSeed = testSeeds[i];
                 string randomSeed = RandomString(7).ToUpper();
 
@@ -1061,7 +1066,7 @@ namespace SeedSearcher
             //     _corruptorCount = AtOManager.Instance.GetMadnessDifficulty() - _madness;
             //     _poverty = AtOManager.Instance.IsChallengeTraitActive("poverty") || MadnessManager.Instance != null && MadnessManager.Instance.IsMadnessTraitActive("poverty");
             // }
-            #pragma warning restore Harmony003 // Harmony non-ref patch parameters modified
+#pragma warning restore Harmony003 // Harmony non-ref patch parameters modified
 
             LootData lootData = Globals.Instance.GetLootData(_shop);
             if (lootData == null)
@@ -1230,7 +1235,7 @@ namespace SeedSearcher
                 }
             }
             // LogInfo("GetItemsFromSeed - End 1");
-            #pragma warning disable Harmony003 // Harmony non-ref patch parameters modified
+#pragma warning disable Harmony003 // Harmony non-ref patch parameters modified
             // LogInfo($"SHOP CONTENTS for {_shop} at node {node} in seed {_seed} (reroll: {(reroll == "" ? _townReroll.ToString() : reroll)}, {(_obeliskChallenge ? "OC " : "")}madness {_madness.ToString()}|{_corruptorCount.ToString() + (_poverty ? " with poverty" : "")})");
 
             return ts1;
@@ -1259,7 +1264,7 @@ namespace SeedSearcher
             return eventId;
 
         }
-    public static void ListToJson(List<ItemObject> inputList, string filePath)
+        public static void ListToJson(List<ItemObject> inputList, string filePath)
         {
             try
             {
@@ -1332,9 +1337,6 @@ namespace SeedSearcher
             // ListToJson(allItems, path);
             LogDebug("All Items written to json");
         }
-
-
-    
 
 
 

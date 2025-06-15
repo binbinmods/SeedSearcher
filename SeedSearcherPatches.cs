@@ -56,10 +56,10 @@ namespace SeedSearcher
         {
             // Needs to be called here since the game content needs to exist to properly search through it.
             LogInfo("CreateGameContentPostfix - Start");
-            // string seed2 = "3ASMHBK";
-            // string shop = "rubychest";
-            // string node = "aqua_20";
-            // ListInfoFromSeed(seed2,shop,node);
+            // string seed2 = "539ZX6M";
+            // string shop = "caravanshop";//caravanshop
+            // string node = "sen_44";
+            // LogSingleShop(shop, seed2, node);
             // LogAllItems();
             // FindSeedWithItems();
             // CheckSingleSeed("QB2WCZW");
@@ -79,9 +79,9 @@ namespace SeedSearcher
             //     string seed = DoubleCaravanEpics(l, nSeeds);
             //     LogDebug($"Seed meeting conditions: {seed}");
             // }
-            
+
             // WriteItemsToJson();
-            
+
 
             if (f)
             {
