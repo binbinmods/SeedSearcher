@@ -11,11 +11,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Analytics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using System.Text.Json;
 
 // Make sure your namespace is the same everywhere
 namespace SeedSearcher
@@ -1297,6 +1297,49 @@ namespace SeedSearcher
             }
         }
 
+        public static void ListToText(List<ItemObject> inputList, string filePath)
+        {
+            try
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append("{");
+
+                foreach (var item in inputList)
+                {
+                    string id = item.Id;
+                    // List<string> propList = [];
+                    string itemId = $"\"{id}\": ";
+                    stringBuilder.Append(itemId);
+                    stringBuilder.Append("{");
+                    string cardName = $"\"CardName\":\"{item.Name}\", ";
+                    string cardClass = $"\"CardClass\":\"{item.CardType}\", ";
+                    string cardRarity = $"\"CardRarity\":\"{item.CardRarity}\", ";
+                    string dropOnly = $"\"DropOnly\":{item.Droponly.ToString().ToLower()}, ";
+                    string cardUpgraded = $"\"CardUpgraded\":\"{item.CardUpgraded}\", ";
+                    string upgradesToRareId = $"\"UpgradesToRareId\":\"{item.UpgradesToRareId}\", ";
+                    string percentRetentionEndGame = $"\"PercentRetentionEndGame\":{item.PercentRetentionEndGame}, ";
+                    string percentDiscountShop = $"\"PercentDiscountShop\":{item.PercentDiscountShop}";
+                    stringBuilder.Append(cardName);
+                    stringBuilder.Append(cardClass);
+                    stringBuilder.Append(cardRarity);
+                    stringBuilder.Append(dropOnly);
+                    stringBuilder.Append(cardUpgraded);
+                    stringBuilder.Append(upgradesToRareId);
+                    stringBuilder.Append(percentRetentionEndGame);
+                    stringBuilder.Append(percentDiscountShop);
+                    stringBuilder.Append("}, ");
+                }
+                stringBuilder.Remove(stringBuilder.Length - 2, 2); // Remove the last comma
+                stringBuilder.Append("}");
+                File.WriteAllText(filePath, stringBuilder.ToString());
+                LogDebug($"Text file successfully created at: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                LogDebug($"ERROR: Could not create text file {ex.Message}");
+            }
+        }
+
         public static void WriteItemsToJson()
         {
             LogDebug("Logging all Keys");
@@ -1329,12 +1372,14 @@ namespace SeedSearcher
             // Save allItems to json
             LogDebug("Writing all Items to json");
             // string path = "/Users/kevinmccoy/Library/Application Support/Steam/steamapps/common/Across the Obelisk/BepInEx/Mod Development/Custom Mods/SeedSearcher/AllItems.json";
-            // string jsonString = JsonSerializer.Serialize(allItems, new JsonSerializerOptions 
-            // { 
-            //     WriteIndented = true 
-            // });            
+            string path = "/Users/kevinmccoy/Library/Application Support/Steam/steamapps/common/Across the Obelisk/BepInEx/Mod Development/Custom Mods/SeedSearcher/AllItems.txt";
+            // string jsonString = JsonSerializer.Serialize(allItems, new JsonSerializerOptions
+            // {
+            //     WriteIndented = true
+            // });
             // File.WriteAllText(path, jsonString);
             // ListToJson(allItems, path);
+            ListToText(allItems, path);
             LogDebug("All Items written to json");
         }
 
@@ -1347,7 +1392,8 @@ namespace SeedSearcher
 public class ItemObject(string name, CardData cardData)
 {
     // Properties
-    public string Name { get; set; } = name;
+    public string Id { get; set; } = name;
+    public string Name { get; set; } = cardData.CardName;
     public bool Droponly { get; set; } = cardData.Item.DropOnly;
     public string CardUpgraded { get; set; } = cardData.CardUpgraded.ToString();
     public string UpgradesToRareId { get; set; } = cardData.UpgradesToRare?.Id ?? "";

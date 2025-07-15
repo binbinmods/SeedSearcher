@@ -80,7 +80,7 @@ namespace SeedSearcher
             //     LogDebug($"Seed meeting conditions: {seed}");
             // }
 
-            // WriteItemsToJson();
+            WriteItemsToJson();
 
 
             if (f)
