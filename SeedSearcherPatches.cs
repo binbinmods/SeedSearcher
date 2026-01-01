@@ -86,26 +86,25 @@ namespace SeedSearcher
             if (f)
             {
                 Dictionary<string, string> itemsMappedToShop = new() {
-                    {"blooddguard","caravanshop"},
-                    {"virulentring","caravanshop"},                    
+                    {"heartofthorns","caravanshop"},
+                    // {"virulentring","caravanshop"},                    
                     // {"smallchest2","voidtwins"},
                     // {"smallchest3","voidtsnemo"},
 
                 };
                 LogDebug("dict init");
 
-                int nSeeds = 1_000_000;
+                int nSeeds = 5_000;
                 List<string> seedInfo = CheckSeeds(itemsMappedToShop, nSeeds, madness: 1, corruptorCount: 0);
                 LogDebug($"List of Seeds with good things: \n {string.Join(", ", seedInfo)}");
             }
 
             List<(string, string, string)> thingsToSearch =
             [
-                ("blooddguardrare","caravanshop","sen_44"),
-                ("virulentring","caravanshop","sen_44"),
+                ("heartofthornsrare","caravanshop","sen_44"),
                 // ("bloodblobpetrare","blobsphys","voidlow_28"),
             ];
-            // LogSeedsNodeSpecified(thingsToSearch, nSeeds: 1_000_000);
+            // LogSeedsNodeSpecified(thingsToSearch, nSeeds: 5_000);
 
             List<(string, string)> eventsToFind =
             [
