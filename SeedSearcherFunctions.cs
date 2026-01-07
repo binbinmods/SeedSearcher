@@ -1353,7 +1353,7 @@ namespace SeedSearcher
             }
         }
 
-        public static void WriteItemsToJson()
+        public static void WriteItemsToText()
         {
             LogDebug("Logging all Keys");
             // List<Dictionary<string, string>> allItems = new();
@@ -1382,17 +1382,23 @@ namespace SeedSearcher
                 ItemObject itemDict = new(item, cardData);
                 allItems.Add(itemDict);
             }
+            if (WriteItemsToTextFile.Value)
+            {
+                bool isRooted = Path.IsPathRooted(WriteItemsToTextFilePath.Value);
+                string path = isRooted ? WriteItemsToTextFilePath.Value : (WriteItemsToTextFilePath.Value.IsNullOrWhiteSpace() ? BepInEx.Paths.BepInExRootPath + "/Logs/AllItems.txt" : BepInEx.Paths.BepInExRootPath + WriteItemsToTextFilePath.Value);
+
+                ListToText(allItems, path);
+                LogDebug("All Items written to text");
+            }
             // Save allItems to json
-            LogDebug("Writing all Items to json");
-            string path = "AllItems.txt";
             // string jsonString = JsonSerializer.Serialize(allItems, new JsonSerializerOptions
             // {
             //     WriteIndented = true
             // });
             // File.WriteAllText(path, jsonString);
             // ListToJson(allItems, path);
-            ListToText(allItems, path);
-            LogDebug("All Items written to json");
+            // LogDebug("Writing all Items to json");
+
         }
 
 

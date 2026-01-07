@@ -1,3 +1,11 @@
+# 1.2.1
+
+Added option to save items to file
+
+# 1.2.0 
+
+Full release for others to use
+
 # 1.1.0
 
 Added ability to search from menu
@@ -12,4 +20,4 @@ Added back-end searching for boss/guaranteed items
 
 # 1.0.0
 
-Initial Release
+Initial Concept

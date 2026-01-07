@@ -42,6 +42,8 @@ namespace SeedSearcher
         public static ConfigEntry<string> ItemToSearchFor3 { get; set; }
         public static ConfigEntry<string> ItemToSearchFor4 { get; set; }
         public static ConfigEntry<bool> SearchForItemsOnChange { get; set; }
+        public static ConfigEntry<bool> WriteItemsToTextFile { get; set; }
+        public static ConfigEntry<string> WriteItemsToTextFilePath { get; set; }
 
         internal static int ModDate = int.Parse(DateTime.Today.ToString("yyyyMMdd"));
         private readonly Harmony harmony = new(PluginInfo.PLUGIN_GUID);
@@ -77,6 +79,18 @@ namespace SeedSearcher
             ItemToSearchFor4 = Config.Bind(new ConfigDefinition(modName, "ItemToSearchFor4"), "cheese", new ConfigDescription("Fourth item to search for in the caravanshop", acceptableItems));
 
             SearchForItemsOnChange = Config.Bind(new ConfigDefinition(modName, "SearchForItemsOnChange"), false, new ConfigDescription("When clicked, will search through seeds for the items. May cause the game to temporarily freeze."));
+
+            WriteItemsToTextFile = Config.Bind(new ConfigDefinition(modName, "WriteItemsToTextFile"), false, new ConfigDescription("If true, will write the items to a text file. File will be saved according to the file path set in the next setting."));
+            WriteItemsToTextFilePath = Config.Bind(new ConfigDefinition(modName, "WriteItemsToTextFilePath"), "AllItems.txt", new ConfigDescription("File path to the text file to write the items to. Default is in the BepInEx/logs folder. Use a relative path to the BepInEx/logs folder."));
+
+            WriteItemsToTextFilePath.SettingChanged += (sender, args) =>
+            {
+                if (WriteItemsToTextFile.Value)
+                {
+                    LogInfo("Writing items to text file");
+                    SeedSearcherFunctions.WriteItemsToText();
+                }
+            };
 
             SearchForItemsOnChange.SettingChanged += (sender, args) =>
             {

@@ -35,18 +35,18 @@ namespace SeedSearcher
         [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.BeginAdventure))]
         public static void BeginAdventurePrefix(ref AtOManager __instance, out string __state)
         {
-            LogInfo("BeginAdventurePrefix - Start");
+            // LogInfo("BeginAdventurePrefix - Start");
             __state = __instance.GetGameId();
-            LogInfo($"BeginAdventurePrefix - GameID - {__state}");
+            // LogInfo($"BeginAdventurePrefix - GameID - {__state}");
         }
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.BeginAdventure))]
         public static void BeginAdventurePostfix(ref AtOManager __instance, string __state)
         {
-            LogInfo("BeginAdventurePostfix - Start");
+            // LogInfo("BeginAdventurePostfix - Start");
             __instance.SetGameId(__state);
-            LogInfo($"BeginAdventurePostfix - GameID - {__instance.GetGameId()}");
+            // LogInfo($"BeginAdventurePostfix - GameID - {__instance.GetGameId()}");
         }
 
 
@@ -67,7 +67,7 @@ namespace SeedSearcher
 
             // LogDebug(SearchCaravansForEpicPairs.Value.ToString());
 
-            // WriteItemsToJson();
+            // WriteItemsToText();
 
 
             if (SearchForItemsOnStartup.Value)
