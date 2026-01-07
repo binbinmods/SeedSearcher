@@ -40,6 +40,22 @@ namespace SeedSearcher
             {"FrozenSewersElves", "sewers_11"}, {"towntier0_b", "sen_41"}, {"chappel", "sen_21"}, {"voidtsnemo", "voidlow_24"},{"voidshop", "voidlow_8"},{"rubychest","aqua_20"},{"rubyrefuges","aqua_20"},{"caravanshop", "sen_44"},{"Basthet", "pyr_7"}, {"Dryad_a", "sen_31"}, {"Dryad_b", "sen_32"}, {"Faeborg", "faen_38"}, {"Hydra", "aqua_35"}, {"Ignidoh", "velka_32"}, {"Mansionright", "faen_35"}, {"Mortis", "ulmin_56"}, {"Tulah", "spider_8"}, {"Ylmer", "sen_33"}, {"belphyor", "secta_5"}, {"belphyorquest", "velka_8"}, {"burninghand", "velka_25"}, {"dreadhalfman", "dread_11"}, {"elvenarmory", "faen_29"}, {"elvenarmoryplus", "faen_29"}, {"goblintown", "velka_6"}, {"harpychest", "velka_27"}, {"harpyfight", "velka_27"}, {"khazakdhum", "velka_29"}, {"kingrat", "sewers_8"}, {"minotaurcave", "velka_9"}, {"sahtikraken", "sahti_65"}, {"sahtikrakenmjolmir", "sahti_65"}, {"sahtirustkingtreasure", "sahti_62"}, {"spiderqueen", "sen_1"}, {"tyrant", "faen_25"}, {"tyrantbeavers", "faen_25"}, {"tyrantchampy", "faen_25"}, {"tyrantchompy", "faen_25"}, {"tyrantchumpy", "faen_25"}, {"upripreboss", "uprising_13"}, {"yogger", "sen_27"},{"voidtwins", "voidlow_25"},{"voidtreasurejade", "voidlow_16"}
         };
 
+        public static void ExecuteSearch()
+        {
+            List<(string, string)> itemsMappedToShop = new() {
+                   (ItemToSearchFor1.Value, LocationToSearchForItem1.Value),
+                   (ItemToSearchFor2.Value, LocationToSearchForItem2.Value),
+                   (ItemToSearchFor3.Value, LocationToSearchForItem3.Value),
+                   (ItemToSearchFor4.Value, LocationToSearchForItem4.Value),
+
+                };
+            LogDebug("dict init");
+
+            int nSeeds = NumberOfSeeds.Value;
+            List<string> seedInfo = CheckSeeds(itemsMappedToShop, nSeeds, madness: MadnessLevel.Value, corruptorCount: CorruptorCount.Value);
+            LogInfo($"List of Seeds with good things: \n {string.Join(", ", seedInfo)}");
+        }
+
         public static Dictionary<string, string> guaranteedDropNodeMap = new()
             {
                 {"rubychest","aqua_20"},
@@ -311,7 +327,6 @@ namespace SeedSearcher
                 {"upripreboss", "uprising_13"},
                 {"yogger", "sen_27"},
             };
-
         public static Dictionary<string, string> petDropNodeMap = new()
             {
                 {"Jelly", "aqua_41"},
@@ -401,7 +416,6 @@ namespace SeedSearcher
 
         internal static string DoubleCaravanEpics(List<(string, string)> listOfPairs, int nSeeds)
         {
-            // int nSeeds = 10_000_000;
             StringBuilder foundItems = new();
             for (int i = 0; i < nSeeds; i++)
             {
@@ -431,28 +445,20 @@ namespace SeedSearcher
 
         }
 
-
         public static bool ItemListContains(List<string> itemList, string item)
         {
             return itemList.Contains(item) || itemList.Contains(item + "rare");
         }
 
-        internal static bool CheckSingleSeed(string seed, Dictionary<string, string> itemsAndShops, int madness = 1, int corruptorCount = 0)
+        internal static bool SeedHasAllItemsInLocations(string seed, List<(string, string)> itemsAndShops, int madness = 1, int corruptorCount = 0)
         {
-            // LogDebug("CheckSingleSeed");
-
-            // string shop = "sahtikrakenmjolmir";   
-            // string lootLocation = "sahti_65";
-            // LogDebug("CheckSingleSeed - Pre getItems");
-
-            foreach (KeyValuePair<string, string> itemShopPair in itemsAndShops)
+            foreach ((string, string) itemShopPair in itemsAndShops)
             {
-                string item = itemShopPair.Key;
+                string item = itemShopPair.Item1;
+                if (item == "") { continue; }
                 item = char.IsDigit(item[item.Length - 1]) ? item.Remove(item.Length - 1) : item;
-                string shop = itemShopPair.Value;
-                // LogDebug($"Current item: {item}");
-                // LogDebug($"Current shop: {shop}");
-                if (!CheckSingleShop(item, shop, seed, madness, corruptorCount))
+                string shop = itemShopPair.Item2;
+                if (!CheckSingleShopHasItem(item, shop, seed, madness, corruptorCount))
                 {
                     return false;
                 }
@@ -460,7 +466,7 @@ namespace SeedSearcher
             return true;
         }
 
-        internal static bool CheckSingleShop(string item, string shop, string seed, int madness, int corruptorCount, string node = null)
+        internal static bool CheckSingleShopHasItem(string item, string shop, string seed, int madness, int corruptorCount, string node = null)
         {
             string lootLocation = allLootLocations.ContainsKey(shop) ? allLootLocations[shop] : node;
             if (lootLocation == null) { LogDebug($"improper LootLocation - {shop}"); return false; }
@@ -469,7 +475,7 @@ namespace SeedSearcher
                 LogDebug($"CheckSingleShop null node: {lootLocation} in seed {seed}");
                 return false;
             }
-            List<string> itemList = GetItemsFromSeed(_seed: seed, _shop: shop, _node: lootLocation, _madness: madness, _corruptorCount: corruptorCount);
+            List<string> itemList = GetItemsFromSeed(_seed: seed, _shop: shop, _node: lootLocation, _madness: madness, _corruptorCount: corruptorCount, _poverty: PovertyEnabled.Value);
             // if(itemList.Contains(""))            
             return itemList.Contains(item);
         }
@@ -495,23 +501,30 @@ namespace SeedSearcher
             return itemList.Contains(item);
         }
 
-        internal static List<string> CheckSeeds(Dictionary<string, string> itemsAndShops, int nSeeds, int madness = 1, int corruptorCount = 0)
+        internal static List<string> CheckSeeds(List<(string, string)> itemsAndShops, int nSeeds, int madness = 1, int corruptorCount = 0)
         {
             LogDebug("CheckSeeds - Begin");
             // string correctSeed = "";
             List<string> foundSeeds = [];
+            int increment = Mathf.Clamp(nSeeds / 100, 1_000, 100_000);
             for (int i = 0; i < nSeeds; i++)
             {
 
                 string randomSeed = RandomString(8).ToUpper();
-                if (i % 50_000 == 0) { LogDebug($"On Seed {i}: {randomSeed}"); }
-                if (CheckSingleSeed(randomSeed, itemsAndShops, madness: madness, corruptorCount: corruptorCount))
+                if (i % increment == 0) { LogDebug($"On Seed {i}: {randomSeed}"); }
+                if (SeedHasAllItemsInLocations(randomSeed, itemsAndShops, madness: madness, corruptorCount: corruptorCount))
                 {
                     foundSeeds.Append(randomSeed);
-                    List<string> items = itemsAndShops.Keys.ToList();
+                    List<string> items = itemsAndShops.Select(x => x.Item1).ToList();
                     string foundStuff = string.Join(", ", items);
                     LogInfo($"Found Seed with {foundStuff}: {randomSeed}");
 
+                    if (StopSearchOnSeedFound.Value)
+                    {
+                        LogInfo($"Stopping search on seed found: {randomSeed}");
+                        AlertManager.Instance.AlertConfirm($"Seed found: {randomSeed} \n Contains: {foundStuff}");
+                        return foundSeeds;
+                    }
                 }
             }
             return foundSeeds;
@@ -1371,8 +1384,7 @@ namespace SeedSearcher
             }
             // Save allItems to json
             LogDebug("Writing all Items to json");
-            // string path = "/Users/kevinmccoy/Library/Application Support/Steam/steamapps/common/Across the Obelisk/BepInEx/Mod Development/Custom Mods/SeedSearcher/AllItems.json";
-            string path = "/Users/kevinmccoy/Library/Application Support/Steam/steamapps/common/Across the Obelisk/BepInEx/Mod Development/Custom Mods/SeedSearcher/AllItems.txt";
+            string path = "AllItems.txt";
             // string jsonString = JsonSerializer.Serialize(allItems, new JsonSerializerOptions
             // {
             //     WriteIndented = true

@@ -66,54 +66,36 @@ namespace SeedSearcher
 
 
             // LogDebug(SearchCaravansForEpicPairs.Value.ToString());
-            // if(SearchCaravansForEpicPairs.Value)
-            bool f = false;
 
-            // if (f)
-            // {
-            //     List<(string, string)> l = [
-            //                             ("holyhammerrare","justicarring"),
-            //                             ];
-            //     // int nSeeds = NumberOfSeeds.Value;
-            //     int nSeeds = 2_000_000;
-            //     string seed = DoubleCaravanEpics(l, nSeeds);
-            //     LogDebug($"Seed meeting conditions: {seed}");
-            // }
-
-            WriteItemsToJson();
+            // WriteItemsToJson();
 
 
-            if (f)
+            if (SearchForItemsOnStartup.Value)
             {
-                Dictionary<string, string> itemsMappedToShop = new() {
-                    {"heartofthorns","caravanshop"},
-                    // {"virulentring","caravanshop"},                    
-                    // {"smallchest2","voidtwins"},
-                    // {"smallchest3","voidtsnemo"},
-
-                };
-                LogDebug("dict init");
-
-                int nSeeds = 5_000;
-                List<string> seedInfo = CheckSeeds(itemsMappedToShop, nSeeds, madness: 1, corruptorCount: 0);
-                LogDebug($"List of Seeds with good things: \n {string.Join(", ", seedInfo)}");
+                ExecuteSearch();
             }
 
-            List<(string, string, string)> thingsToSearch =
+
+
+            bool f = false;
+            if (f)
+            {
+                List<(string, string, string)> thingsToSearch =
             [
                 ("heartofthornsrare","caravanshop","sen_44"),
                 // ("bloodblobpetrare","blobsphys","voidlow_28"),
             ];
-            // LogSeedsNodeSpecified(thingsToSearch, nSeeds: 5_000);
+                // LogSeedsNodeSpecified(thingsToSearch, nSeeds: 5_000);
 
-            List<(string, string)> eventsToFind =
-            [
-                ("sen_29", "e_sen29_a"),
+                List<(string, string)> eventsToFind =
+                [
+                    ("sen_29", "e_sen29_a"),
                 // ("bloodblobpetrare","blobbleed","sen_29"),
                 // ("bloodblobpetrare","blobbleed","faen_41"),
                 // ("bloodblobpetrare","blobsphys","voidlow_28"),
             ];
 
+            }
 
 
         }

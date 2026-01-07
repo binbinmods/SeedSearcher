@@ -1,6 +1,6 @@
 # 1.1.0
 
-Added ability to search for specific caravan epic pairs (must be hard coded for now)
+Added ability to search from menu
 
 # 1.0.2
 

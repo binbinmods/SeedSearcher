@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <AssemblyName>com.binbin.definiteseeds</AssemblyName>
+    <AssemblyName>com.binbin.SeedSearcher</AssemblyName>
     <Product>SeedSearcher</Product>
     <Version>1.1.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -35,12 +35,12 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>../../!libs/Assembly-CSharp.dll</HintPath>
     </Reference>
-    <!-- <Reference Include="com.stiffmeds.obeliskialessentials">
+    <Reference Include="com.stiffmeds.obeliskialessentials">
       <HintPath>../../!libs/com.stiffmeds.obeliskialessentials.dll</HintPath>
     </Reference>
     <Reference Include="com.stiffmeds.obeliskialcontent">
       <HintPath>../../!libs/com.stiffmeds.obeliskialcontent.dll</HintPath>
-    </Reference> -->
+    </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
