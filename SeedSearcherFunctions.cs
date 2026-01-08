@@ -522,7 +522,11 @@ namespace SeedSearcher
                     if (StopSearchOnSeedFound.Value)
                     {
                         LogInfo($"Stopping search on seed found: {randomSeed}");
-                        AlertManager.Instance.AlertConfirm($"Seed found: {randomSeed} \n Contains: {foundStuff}");
+                        if (SaveSeedToGame.Value)
+                        {
+                            SavedSeed = randomSeed;
+                        }
+                        AlertManager.Instance.AlertConfirm($"Seed found {(SaveSeedToGame.Value ? $"and saved to game" : "")}:\n {randomSeed} \n Contains: {foundStuff}");
                         return foundSeeds;
                     }
                 }
@@ -1388,7 +1392,7 @@ namespace SeedSearcher
                 string path = isRooted ? WriteItemsToTextFilePath.Value : (WriteItemsToTextFilePath.Value.IsNullOrWhiteSpace() ? BepInEx.Paths.BepInExRootPath + "/Logs/AllItems.txt" : BepInEx.Paths.BepInExRootPath + WriteItemsToTextFilePath.Value);
 
                 ListToText(allItems, path);
-                LogDebug("All Items written to text");
+                AlertManager.Instance.AlertConfirm($"All Items written to text at {path}");
             }
             // Save allItems to json
             // string jsonString = JsonSerializer.Serialize(allItems, new JsonSerializerOptions
@@ -1399,6 +1403,20 @@ namespace SeedSearcher
             // ListToJson(allItems, path);
             // LogDebug("Writing all Items to json");
 
+        }
+
+        public static string SavedSeed = "";
+
+        public static string GetSavedSeed()
+        {
+            if (SavedSeed.IsNullOrWhiteSpace())
+            {
+                return AtOManager.Instance?.GetGameId() ?? RandomString(7);
+            }
+            else
+            {
+                return SavedSeed;
+            }
         }
 
 

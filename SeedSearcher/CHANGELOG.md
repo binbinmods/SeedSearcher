@@ -2,6 +2,10 @@
 
 Added option to save items to file
 
+Added option to save seed to game
+
+Added option to bypass Madness Randomization
+
 # 1.2.0 
 
 Full release for others to use

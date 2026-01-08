@@ -14,6 +14,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Analytics;
 using System.Text;
 using static SeedSearcher.SeedSearcherFunctions;
+using TMPro;
 
 // Make sure your namespace is the same everywhere
 namespace SeedSearcher
@@ -32,20 +33,40 @@ namespace SeedSearcher
         // #pragma warning disable Harmony003 // Harmony non-ref patch parameters modified
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.BeginAdventure))]
-        public static void BeginAdventurePrefix(ref AtOManager __instance, out string __state)
+        [HarmonyPatch(typeof(HeroSelectionManager), "Start")]
+        public static void HeroSelectionManagerStartPrefix(ref HeroSelectionManager __instance, TMP_Text ___gameSeedTxt)
         {
             // LogInfo("BeginAdventurePrefix - Start");
-            __state = __instance.GetGameId();
+            if (SaveSeedToGame.Value)
+            {
+                AtOManager.Instance?.SetGameId(GetSavedSeed());
+                ___gameSeedTxt.text = GetSavedSeed();
+            }
             // LogInfo($"BeginAdventurePrefix - GameID - {__state}");
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.BeginAdventure))]
+        public static void BeginAdventurePrefix(ref AtOManager __instance)
+        {
+            // LogInfo("BeginAdventurePostfix - Start");
+            if (SaveSeedToGame.Value || BypassMadnessRandomization.Value)
+            {
+                SavedSeed = __instance.GetGameId();
+            }
+            // LogInfo($"BeginAdventurePostfix - GameID - {__instance.GetGameId()}");
         }
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(AtOManager), nameof(AtOManager.BeginAdventure))]
-        public static void BeginAdventurePostfix(ref AtOManager __instance, string __state)
+        public static void BeginAdventurePostfix(ref AtOManager __instance)
         {
             // LogInfo("BeginAdventurePostfix - Start");
-            __instance.SetGameId(__state);
+            if (SaveSeedToGame.Value || BypassMadnessRandomization.Value)
+            {
+                LogDebug($"BeginAdventurePostfix - Setting GameID to {GetSavedSeed()}");
+                __instance.SetGameId(GetSavedSeed());
+            }
             // LogInfo($"BeginAdventurePostfix - GameID - {__instance.GetGameId()}");
         }
 

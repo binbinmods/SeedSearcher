@@ -32,6 +32,8 @@ namespace SeedSearcher
         public static ConfigEntry<int> CorruptorCount { get; set; }
         public static ConfigEntry<bool> PovertyEnabled { get; set; }
         public static ConfigEntry<bool> StopSearchOnSeedFound { get; set; }
+        public static ConfigEntry<bool> SaveSeedToGame { get; set; }
+        public static ConfigEntry<bool> BypassMadnessRandomization { get; set; }
         public static ConfigEntry<int> NumberOfSeeds { get; set; }
         public static ConfigEntry<string> LocationToSearchForItem1 { get; set; }
         public static ConfigEntry<string> LocationToSearchForItem2 { get; set; }
@@ -65,6 +67,8 @@ namespace SeedSearcher
             CorruptorCount = Config.Bind(new ConfigDefinition(modName, "CorruptorCount"), 0, new ConfigDescription("Corruptor count to search through. 0 - 9. Purple items are more common at higher corruptor counts."));
             PovertyEnabled = Config.Bind(new ConfigDefinition(modName, "PovertyEnabled"), false, new ConfigDescription("If true, will search through seeds with poverty enabled."));
             StopSearchOnSeedFound = Config.Bind(new ConfigDefinition(modName, "StopSearchOnSeedFound"), false, new ConfigDescription("If true, will stop searching through seeds when a seed with the items set in the menu is found."));
+            SaveSeedToGame = Config.Bind(new ConfigDefinition(modName, "SaveSeedToGame"), true, new ConfigDescription("If true, will save the seed to the game. Only works if StopSearchOnSeedFound is true."));
+            BypassMadnessRandomization = Config.Bind(new ConfigDefinition(modName, "BypassMadnessRandomization"), true, new ConfigDescription("If true, will bypass the seed randomization on High Madness. Works for any seed, not just ones found by this mod."));
             NumberOfSeeds = Config.Bind(new ConfigDefinition(modName, "Seeds to Search"), 200_000, new ConfigDescription("Maximum number of seeds to search through (I believe it takes around 2 minutes to search through 1 million seeds)"));
 
             AcceptableValueList<string> acceptableItems = new AcceptableValueList<string>([.. GetItemList()]);
@@ -80,7 +84,7 @@ namespace SeedSearcher
 
             SearchForItemsOnChange = Config.Bind(new ConfigDefinition(modName, "SearchForItemsOnChange"), false, new ConfigDescription("When clicked, will search through seeds for the items. May cause the game to temporarily freeze."));
 
-            WriteItemsToTextFile = Config.Bind(new ConfigDefinition(modName, "WriteItemsToTextFile"), false, new ConfigDescription("If true, will write the items to a text file. File will be saved according to the file path set in the next setting."));
+            WriteItemsToTextFile = Config.Bind(new ConfigDefinition(modName, "WriteItemsToTextFile"), false, new ConfigDescription("If true, when this config is saved, write the items to a text file. File will be saved according to the file path set in the next setting."));
             WriteItemsToTextFilePath = Config.Bind(new ConfigDefinition(modName, "WriteItemsToTextFilePath"), "AllItems.txt", new ConfigDescription("File path to the text file to write the items to. Default is in the BepInEx/logs folder. Use a relative path to the BepInEx/logs folder."));
 
             WriteItemsToTextFilePath.SettingChanged += (sender, args) =>
@@ -89,6 +93,7 @@ namespace SeedSearcher
                 {
                     LogInfo("Writing items to text file");
                     SeedSearcherFunctions.WriteItemsToText();
+                    WriteItemsToTextFile.Value = false;
                 }
             };
 
