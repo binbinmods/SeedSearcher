@@ -1,3 +1,9 @@
+# 1.2.2
+
+Fixed README and manifest
+
+Removed extra dll
+
 # 1.2.1
 
 Added option to save items to file

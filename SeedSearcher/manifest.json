@@ -1,8 +1,8 @@
 {
     "name": "Seed_Searcher",
-    "version_number": "1.2.1",
+    "version_number": "1.2.2",
     "website_url": "https://github.com/binbinmods/SeedSearcher",
-    "description": "A mod that bypasses the randomized seeds in high madness.",
+    "description": "A mod that lets you search for seeds with specific items in specific locations.",
     "dependencies": [
         "BepInEx-BepInExPack_AcrossTheObelisk-5.4.23"
     ]

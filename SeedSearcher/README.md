@@ -2,6 +2,18 @@
 
 This is a simple mod that makes it easier to search through seeds for things.
 
+Should work with modded versions of the game as well
+
+## How to Use
+
+- Install the mod
+- Open the game
+- Open the config menu (either through mod manager or the F5 menu)
+- Specify which items you want in which areas
+- Save the config (or launch the game)
+- Find your seeds
+- Depending on your config settings, it can directly export the seed to your game (confirm that it actually does this of course)
+- Note: Rare seeds will temporarily freeze your game as it searches for the seed
 
 ## Installation (manual)
 
@@ -19,7 +31,7 @@ This is a simple mod that makes it easier to search through seeds for things.
 
 ## Support
 
-This has been updated for version 1.5.0.1.
+This has been updated for version 1.7.2
 
 Hope you enjoy it and if have any issues, ping me in Discord or make a post in the **modding #support-and-requests** channel of the [official Across the Obelisk Discord](https://discord.gg/across-the-obelisk-679706811108163701).
 
